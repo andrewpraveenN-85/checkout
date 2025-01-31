@@ -2,8 +2,8 @@
 
 namespace frontend\controllers;
 
-use frontend\models\ResendVerificationEmailForm;
-use frontend\models\VerifyEmailForm;
+use common\models\ResendVerificationEmailForm;
+use common\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
@@ -11,21 +11,21 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
+use common\models\PasswordResetRequestForm;
+use common\models\ResetPasswordForm;
+use common\models\SignupForm;
 use frontend\models\ContactForm;
+use backend\models\Companies;
 
 /**
  * Site controller
  */
-class SiteController extends Controller
-{
+class SiteController extends Controller {
+
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::class,
@@ -55,8 +55,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function actions()
-    {
+    public function actions() {
         return [
             'error' => [
                 'class' => \yii\web\ErrorAction::class,
@@ -73,9 +72,17 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         return $this->render('index');
+    }
+
+    public function actionDashboard() {
+        $model = $this->findModel(Yii::$app->user->identity->company_id);
+        
+        return $this->render('dashboard', [
+            'model' => $model,
+            'countries' => $this->getCountries()
+        ]);
     }
 
     /**
@@ -83,8 +90,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogin()
-    {
+    public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -97,7 +103,7 @@ class SiteController extends Controller
         $model->password = '';
 
         return $this->render('login', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -106,8 +112,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogout()
-    {
+    public function actionLogout() {
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -118,8 +123,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionContact()
-    {
+    public function actionContact() {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
@@ -132,7 +136,7 @@ class SiteController extends Controller
         }
 
         return $this->render('contact', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -141,8 +145,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionAbout()
-    {
+    public function actionAbout() {
         return $this->render('about');
     }
 
@@ -151,16 +154,16 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionSignup()
-    {
+    public function actionSignup() {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+            Yii::$app->session->setFlash('success', 'Thank you for registration.');
             return $this->goHome();
-        }
+        } 
 
         return $this->render('signup', [
-            'model' => $model,
+                    'model' => $model,
+                    'countries' => $this->getCountries()
         ]);
     }
 
@@ -169,21 +172,18 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionRequestPasswordReset()
-    {
+    public function actionRequestPasswordReset() {
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
                 return $this->goHome();
             }
-
             Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
         }
 
         return $this->render('requestPasswordResetToken', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -194,8 +194,7 @@ class SiteController extends Controller
      * @return mixed
      * @throws BadRequestHttpException
      */
-    public function actionResetPassword($token)
-    {
+    public function actionResetPassword($token) {
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidArgumentException $e) {
@@ -209,7 +208,7 @@ class SiteController extends Controller
         }
 
         return $this->render('resetPassword', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -220,8 +219,7 @@ class SiteController extends Controller
      * @throws BadRequestHttpException
      * @return yii\web\Response
      */
-    public function actionVerifyEmail($token)
-    {
+    public function actionVerifyEmail($token) {
         try {
             $model = new VerifyEmailForm($token);
         } catch (InvalidArgumentException $e) {
@@ -241,8 +239,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionResendVerificationEmail()
-    {
+    public function actionResendVerificationEmail() {
         $model = new ResendVerificationEmailForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
@@ -253,7 +250,74 @@ class SiteController extends Controller
         }
 
         return $this->render('resendVerificationEmail', [
-            'model' => $model
+                    'model' => $model
         ]);
+    }
+
+    private function getCountries() {
+        $url = 'https://countriesnow.space/api/v0.1/countries/positions';
+        $contents = file_get_contents($url);
+        $countries = json_decode($contents, true)['data'];
+
+        $countryList = [];
+        if (!empty($countries)) {
+            foreach ($countries as $country) {
+                $countryList[$country['iso2']] = $country['name'];
+            }
+        }
+        asort($countryList);
+        return $countryList;
+    }
+
+    private function getCountriesNowAPI($url) {
+        $contents = file_get_contents($url);
+        return json_decode($contents, true)['data'];
+    }
+
+    private function getDropDownOptions($array) {
+        $options = "<option value=''>Select...</option>";
+        foreach ($array as $value) {
+            $options .= "<option value='" . htmlspecialchars($value) . "'>" . htmlspecialchars($value) . "</option>";
+        }
+        return $options;
+    }
+
+    private function fetchStates($country) {
+        $data = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries/states');
+        foreach ($data as $item) {
+            if ($item['iso2'] === $country) {
+                return array_column($item['states'], 'name');
+            }
+        }
+        return [];
+    }
+
+    private function fetchCities($country) {
+        $data = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries');
+        foreach ($data as $item) {
+            if ($item['iso2'] === $country) {
+                return $item['cities'];
+            }
+        }
+        return [];
+    }
+
+    public function actionGetStatesCities($country) {
+        $states = $this->fetchStates($country);
+        $cities = $this->fetchCities($country);
+        asort($states);
+        asort($cities);
+        return json_encode([
+            'states' => $this->getDropDownOptions($states),
+            'cities' => $this->getDropDownOptions($cities)
+        ]);
+    }
+
+    protected function findModel($id) {
+        if (($model = Companies::findOne(['id' => $id])) !== null) {
+            return $model;
+        }else{
+            return new Companies();
+        }
     }
 }
