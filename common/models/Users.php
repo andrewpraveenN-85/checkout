@@ -6,6 +6,9 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 use backend\models\Companies;
+use backend\models\Roles;
+use backend\models\UsersRoles;
+use backend\models\Sales;
 
 /**
  * This is the model class for table "users".
@@ -41,6 +44,11 @@ use backend\models\Companies;
  */
 class Users extends \yii\db\ActiveRecord implements IdentityInterface {
 
+    public $picture;
+    public $password;
+    public $newpassword;
+    public $role_name;
+
     /**
      * {@inheritdoc}
      */
@@ -53,7 +61,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      */
     public function rules() {
         return [
-            [['date_of_birth', 'password_hash', 'email', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city', 'state', 'country', 'postal_code', 'profile_picture', 'company_id'], 'safe'],
+            [['password', 'newpassword', 'date_of_birth', 'password_hash', 'email', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city', 'state', 'country', 'postal_code', 'profile_picture', 'picture', 'company_id', 'role_name'], 'safe'],
             [['user_type', 'status'], 'string'],
             [['company_id'], 'integer'],
             [['address', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city', 'state', 'country', 'postal_code', 'profile_picture', 'email', 'password_hash', 'password_reset_token', 'verification_token'], 'string', 'max' => 255],
@@ -72,13 +80,13 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
             'middle_name' => 'Middle Name',
             'last_name' => 'Last Name',
             'date_of_birth' => 'Date Of Birth',
-            'contact_number' => 'Contact Number',
+            'contact_number' => 'Contact',
             'address' => 'Address',
             'city' => 'City',
             'state' => 'State',
             'country' => 'Country',
             'postal_code' => 'Postal Code',
-            'profile_picture' => 'Profile Picture',
+            'profile_picture' => 'Picture',
             'user_type' => 'User Type',
             'company_id' => 'Company',
             'email' => 'Email',
@@ -86,6 +94,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
             'status' => 'Status',
             'created_at' => 'Created',
             'updated_at' => 'Updated',
+            'role_name' => 'Role',
         ];
     }
 
@@ -282,5 +291,14 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
             }
         }
         return false; // No permission found
+    }
+
+    public function getRoleNames() {
+        return implode(', ', \yii\helpers\ArrayHelper::getColumn($this->roles, 'name'));
+    }
+
+    public function afterFind() {
+        parent::afterFind();
+        $this->role_name = $this->getRoleNames(); // Assign role name to the public property
     }
 }

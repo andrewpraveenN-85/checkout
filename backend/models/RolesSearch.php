@@ -47,6 +47,11 @@ class RolesSearch extends Roles
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+        
+        $dataProvider->sort->attributes['status'] = [
+            'asc' => [new \yii\db\Expression("FIELD(status, active, inactive)")],
+            'desc' => [new \yii\db\Expression("FIELD(status, inactive, active)")],
+        ];
 
         $this->load($params);
 
@@ -58,10 +63,7 @@ class RolesSearch extends Roles
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'company_id' => $this->company_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

@@ -91,8 +91,8 @@ class SignupForm extends Model {
         if (!empty($image)) {
             $uploadPath = $companyDir . '/' . $name . '.' . $image->getExtension();
             if ($image->saveAs($uploadPath)) {
-                $company->logo = $name . '.' . $image->getExtension();
-                $user->profile_picture = $company->logo;
+                $company->logo = 'storage/' . $company->name . '/' . $name . '.' . $image->getExtension();
+                $user->profile_picture = 'storage/' . $company->name . '/' . $name . '.' . $image->getExtension();
                 return $company->save() && $user->save(false);
             }
         }
@@ -113,6 +113,7 @@ class SignupForm extends Model {
             $user->$dest = is_int($src) ? $this->$dest : $this->$src;
         }
         $user->company_id = $companyId;
+        $user->user_type = 'employee';
         $user->setPassword($this->password);
         $user->generateAuthKey();
         return $user;

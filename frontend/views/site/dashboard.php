@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 
-$this->title = 'Signup';
+$this->title = 'Dashboard';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-signup">

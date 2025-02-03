@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 use common\models\Users;
+
 /**
  * This is the model class for table "users_roles".
  *
@@ -15,21 +16,19 @@ use common\models\Users;
  * @property Roles $role
  * @property Users $user
  */
-class UsersRoles extends \yii\db\ActiveRecord
-{
+class UsersRoles extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'users_roles';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['user_id', 'role_id'], 'required'],
             [['user_id', 'role_id'], 'integer'],
@@ -42,8 +41,7 @@ class UsersRoles extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'user_id' => 'User',
             'role_id' => 'Role',
@@ -57,8 +55,7 @@ class UsersRoles extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getRole()
-    {
+    public function getRole() {
         return $this->hasOne(Roles::class, ['id' => 'role_id']);
     }
 
@@ -67,8 +64,7 @@ class UsersRoles extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
-    {
+    public function getUser() {
         return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 }

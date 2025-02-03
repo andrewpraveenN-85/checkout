@@ -212,12 +212,12 @@ AppAsset::register($this);
                                         <div class="collapse" id="production">
                                             <ul class="nav flex-column ms-3">
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/reports/low-stocks">
+                                                    <a class="nav-link" aria-current="page" href="/factory/production/templates">
                                                         <i class="fa fa-sticky-note fa-fw fa-sm"></i><span class="nav-link-text">Templates</span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/reports/vendors-products">
+                                                    <a class="nav-link" aria-current="page" href="/factory/production/produce">
                                                         <i class="fa fa-cogs fa-sm"></i><span class="nav-link-text">Produce</span>
                                                     </a>
                                                 </li>
@@ -348,7 +348,6 @@ AppAsset::register($this);
                                 </ul>
                             </div>
                         </li>
-                        
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="collapse" href="#settings" role="button" aria-expanded="false" aria-controls="submenu6">
                                 <i class="fa fa-cogs fa-fw fa-sm"></i><span class="nav-link-text">Settings</span><i class="fa fa-caret-down dropdown-arrow"></i>
@@ -358,11 +357,6 @@ AppAsset::register($this);
                                     <li class="nav-item">
                                         <a class="nav-link" aria-current="page" href="/settings/profile">
                                             <i class="fa fa-user fa-fw fa-sm"></i><span class="nav-link-text">Profile</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" aria-current="page" href="/settings/password">
-                                            <i class="fa fa-key fa-fw fa-sm"></i><span class="nav-link-text">Password</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -389,6 +383,11 @@ AppAsset::register($this);
                                                 <li class="nav-item">
                                                     <a class="nav-link" aria-current="page" href="/settings/configurations/tax">
                                                         <i class="fa fa-gavel fa-sm"></i><span class="nav-link-text">Tax</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" aria-current="page" href="/settings/configurations/features">
+                                                        <i class="fa fa-trophy fa-sm"></i><span class="nav-link-text">Feature</span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">

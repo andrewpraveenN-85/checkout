@@ -19,35 +19,34 @@ use Yii;
  * @property Users[] $users
  * @property UsersRoles[] $usersRoles
  */
-class Roles extends \yii\db\ActiveRecord
-{
+class Roles extends \yii\db\ActiveRecord {
+
+    public $permissionList;
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'roles';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['name', 'company_id'], 'required'],
+            [['name', 'company_id', 'permissionList'], 'required'],
             [['status'], 'string'],
             [['company_id'], 'integer'],
             [['name', 'company_id', 'status'], 'safe'],
             [['name'], 'string', 'max' => 255],
+            [['name', 'company_id'], 'unique', 'targetAttribute' => ['name', 'company_id']],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'name' => 'Name',
             'status' => 'Status',
@@ -62,8 +61,7 @@ class Roles extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getPermissions()
-    {
+    public function getPermissions() {
         return $this->hasMany(Permission::class, ['id' => 'permission_id'])->viaTable('roles_permissions', ['role_id' => 'id']);
     }
 
@@ -72,8 +70,7 @@ class Roles extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getRolesPermissions()
-    {
+    public function getRolesPermissions() {
         return $this->hasMany(RolesPermissions::class, ['role_id' => 'id']);
     }
 
@@ -82,8 +79,7 @@ class Roles extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
-    {
+    public function getUsers() {
         return $this->hasMany(Users::class, ['id' => 'user_id'])->viaTable('users_roles', ['role_id' => 'id']);
     }
 
@@ -92,8 +88,7 @@ class Roles extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersRoles()
-    {
+    public function getUsersRoles() {
         return $this->hasMany(UsersRoles::class, ['role_id' => 'id']);
     }
 }

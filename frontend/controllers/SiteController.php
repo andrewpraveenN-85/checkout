@@ -156,7 +156,7 @@ class SiteController extends Controller {
      */
     public function actionSignup() {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+        if ($model->load(Yii::$app->request->post())  && $model->validate() && $model->signup()) {
             Yii::$app->session->setFlash('success', 'Thank you for registration.');
             return $this->goHome();
         } 
@@ -255,9 +255,7 @@ class SiteController extends Controller {
     }
 
     private function getCountries() {
-        $url = 'https://countriesnow.space/api/v0.1/countries/positions';
-        $contents = file_get_contents($url);
-        $countries = json_decode($contents, true)['data'];
+        $countries = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries/positions');
 
         $countryList = [];
         if (!empty($countries)) {

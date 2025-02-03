@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
+            <?php $form = ActiveForm::begin(['id' => 'form-signup', 'options' => ['enctype' => 'multipart/form-data']]); ?>
 
             <?=
             $form->field($model, 'industry')->dropDownList([
@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
             $form->field($model, 'country')->dropDownList($countries, [
                 'prompt' => 'Select...',
                 'id' => 'country-dropdown',
-                'onchange' => '$.get("' . Url::to(["site/get-states-cities"]) . '?country=" + $(this).val(), function(data) {
+                'onchange' => '$.get("' . Url::to(["get-states-cities"]) . '?country=" + $(this).val(), function(data) {
                     var response = JSON.parse(data); 
                     $("#state-dropdown").html(response.states); 
                     $("#city-dropdown").html(response.cities);

@@ -9,24 +9,22 @@ use backend\models\Permission;
 /**
  * PermissionSearch represents the model behind the search form of `backend\models\Permission`.
  */
-class PermissionSearch extends Permission
-{
+class PermissionSearch extends Permission {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id'], 'integer'],
-            [['name', 'status', 'created_at', 'updated_at'], 'safe'],
+            [['name',], 'safe'],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -38,8 +36,7 @@ class PermissionSearch extends Permission
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Permission::find();
 
         // add conditions that should always apply here
@@ -59,12 +56,9 @@ class PermissionSearch extends Permission
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'status', $this->status]);
+        $query->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;
     }

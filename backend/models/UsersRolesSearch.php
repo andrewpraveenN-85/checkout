@@ -9,24 +9,21 @@ use backend\models\UsersRoles;
 /**
  * UsersRolesSearch represents the model behind the search form of `backend\models\UsersRoles`.
  */
-class UsersRolesSearch extends UsersRoles
-{
+class UsersRolesSearch extends UsersRoles {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['user_id', 'role_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -38,8 +35,7 @@ class UsersRolesSearch extends UsersRoles
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = UsersRoles::find();
 
         // add conditions that should always apply here
@@ -60,8 +56,6 @@ class UsersRolesSearch extends UsersRoles
         $query->andFilterWhere([
             'user_id' => $this->user_id,
             'role_id' => $this->role_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
         return $dataProvider;
