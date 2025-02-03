@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\settings;
 
-use backend\models\Suppliers;
-use backend\models\SuppliersSearch;
+use backend\models\Configurations;
+use backend\models\ConfigurationsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SuppliersController implements the CRUD actions for Suppliers model.
+ * ConfigurationsController implements the CRUD actions for Configurations model.
  */
-class SuppliersController extends Controller
+class ConfigurationsController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class SuppliersController extends Controller
     }
 
     /**
-     * Lists all Suppliers models.
+     * Lists all Configurations models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new SuppliersSearch();
+        $searchModel = new ConfigurationsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class SuppliersController extends Controller
     }
 
     /**
-     * Displays a single Suppliers model.
+     * Displays a single Configurations model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class SuppliersController extends Controller
     }
 
     /**
-     * Creates a new Suppliers model.
+     * Creates a new Configurations model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Suppliers();
+        $model = new Configurations();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class SuppliersController extends Controller
     }
 
     /**
-     * Updates an existing Suppliers model.
+     * Updates an existing Configurations model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class SuppliersController extends Controller
     }
 
     /**
-     * Deletes an existing Suppliers model.
+     * Deletes an existing Configurations model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class SuppliersController extends Controller
     }
 
     /**
-     * Finds the Suppliers model based on its primary key value.
+     * Finds the Configurations model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return Suppliers the loaded model
+     * @return Configurations the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Suppliers::findOne(['id' => $id])) !== null) {
+        if (($model = Configurations::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

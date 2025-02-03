@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\stores\materials;
 
-use backend\models\Sales;
-use backend\models\SalesSearch;
+use backend\models\RawItemsCategories;
+use backend\models\RawItemsCategoriesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SalesController implements the CRUD actions for Sales model.
+ * RawItemsCategoriesController implements the CRUD actions for RawItemsCategories model.
  */
-class SalesController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class SalesController extends Controller
     }
 
     /**
-     * Lists all Sales models.
+     * Lists all RawItemsCategories models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new SalesSearch();
+        $searchModel = new RawItemsCategoriesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class SalesController extends Controller
     }
 
     /**
-     * Displays a single Sales model.
+     * Displays a single RawItemsCategories model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class SalesController extends Controller
     }
 
     /**
-     * Creates a new Sales model.
+     * Creates a new RawItemsCategories model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Sales();
+        $model = new RawItemsCategories();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class SalesController extends Controller
     }
 
     /**
-     * Updates an existing Sales model.
+     * Updates an existing RawItemsCategories model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class SalesController extends Controller
     }
 
     /**
-     * Deletes an existing Sales model.
+     * Deletes an existing RawItemsCategories model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class SalesController extends Controller
     }
 
     /**
-     * Finds the Sales model based on its primary key value.
+     * Finds the RawItemsCategories model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return Sales the loaded model
+     * @return RawItemsCategories the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Sales::findOne(['id' => $id])) !== null) {
+        if (($model = RawItemsCategories::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

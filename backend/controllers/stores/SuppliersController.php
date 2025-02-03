@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\stores;
 
-use backend\models\MeasurementUnits;
-use backend\models\MeasurementUnitsSearch;
+use backend\models\Suppliers;
+use backend\models\SuppliersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * MeasurementUnitsController implements the CRUD actions for MeasurementUnits model.
+ * SuppliersController implements the CRUD actions for Suppliers model.
  */
-class MeasurementUnitsController extends Controller
+class SuppliersController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class MeasurementUnitsController extends Controller
     }
 
     /**
-     * Lists all MeasurementUnits models.
+     * Lists all Suppliers models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new MeasurementUnitsSearch();
+        $searchModel = new SuppliersSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class MeasurementUnitsController extends Controller
     }
 
     /**
-     * Displays a single MeasurementUnits model.
+     * Displays a single Suppliers model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class MeasurementUnitsController extends Controller
     }
 
     /**
-     * Creates a new MeasurementUnits model.
+     * Creates a new Suppliers model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new MeasurementUnits();
+        $model = new Suppliers();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class MeasurementUnitsController extends Controller
     }
 
     /**
-     * Updates an existing MeasurementUnits model.
+     * Updates an existing Suppliers model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class MeasurementUnitsController extends Controller
     }
 
     /**
-     * Deletes an existing MeasurementUnits model.
+     * Deletes an existing Suppliers model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class MeasurementUnitsController extends Controller
     }
 
     /**
-     * Finds the MeasurementUnits model based on its primary key value.
+     * Finds the Suppliers model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return MeasurementUnits the loaded model
+     * @return Suppliers the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = MeasurementUnits::findOne(['id' => $id])) !== null) {
+        if (($model = Suppliers::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\reports;
 
-use backend\models\Taxes;
-use backend\models\TaxesSearch;
+use backend\models\Purchases;
+use backend\models\PurchasesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * TaxesController implements the CRUD actions for Taxes model.
+ * PurchasesController implements the CRUD actions for Purchases model.
  */
-class TaxesController extends Controller
+class PurchasesController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class TaxesController extends Controller
     }
 
     /**
-     * Lists all Taxes models.
+     * Lists all Purchases models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new TaxesSearch();
+        $searchModel = new PurchasesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class TaxesController extends Controller
     }
 
     /**
-     * Displays a single Taxes model.
+     * Displays a single Purchases model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class TaxesController extends Controller
     }
 
     /**
-     * Creates a new Taxes model.
+     * Creates a new Purchases model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Taxes();
+        $model = new Purchases();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class TaxesController extends Controller
     }
 
     /**
-     * Updates an existing Taxes model.
+     * Updates an existing Purchases model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class TaxesController extends Controller
     }
 
     /**
-     * Deletes an existing Taxes model.
+     * Deletes an existing Purchases model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class TaxesController extends Controller
     }
 
     /**
-     * Finds the Taxes model based on its primary key value.
+     * Finds the Purchases model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return Taxes the loaded model
+     * @return Purchases the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Taxes::findOne(['id' => $id])) !== null) {
+        if (($model = Purchases::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

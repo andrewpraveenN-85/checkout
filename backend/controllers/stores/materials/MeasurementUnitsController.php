@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\stores\materials;	
 
-use backend\models\Configurations;
-use backend\models\ConfigurationsSearch;
+use backend\models\MeasurementUnits;
+use backend\models\MeasurementUnitsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ConfigurationsController implements the CRUD actions for Configurations model.
+ * MeasurementUnitsController implements the CRUD actions for MeasurementUnits model.
  */
-class ConfigurationsController extends Controller
+class MeasurementUnitsController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Lists all Configurations models.
+     * Lists all MeasurementUnits models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new ConfigurationsSearch();
+        $searchModel = new MeasurementUnitsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Displays a single Configurations model.
+     * Displays a single MeasurementUnits model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Creates a new Configurations model.
+     * Creates a new MeasurementUnits model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Configurations();
+        $model = new MeasurementUnits();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Updates an existing Configurations model.
+     * Updates an existing MeasurementUnits model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Deletes an existing Configurations model.
+     * Deletes an existing MeasurementUnits model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class ConfigurationsController extends Controller
     }
 
     /**
-     * Finds the Configurations model based on its primary key value.
+     * Finds the MeasurementUnits model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return Configurations the loaded model
+     * @return MeasurementUnits the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Configurations::findOne(['id' => $id])) !== null) {
+        if (($model = MeasurementUnits::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

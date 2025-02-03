@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\sellingpoint\products;
 
-use backend\models\SalesProducts;
-use backend\models\SalesProductsSearch;
+use backend\models\ProductsCategories;
+use backend\models\ProductsCategoriesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SalesProductsController implements the CRUD actions for SalesProducts model.
+ * ProductsCategoriesController implements the CRUD actions for ProductsCategories model.
  */
-class SalesProductsController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class SalesProductsController extends Controller
     }
 
     /**
-     * Lists all SalesProducts models.
+     * Lists all ProductsCategories models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new SalesProductsSearch();
+        $searchModel = new ProductsCategoriesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,31 +48,30 @@ class SalesProductsController extends Controller
     }
 
     /**
-     * Displays a single SalesProducts model.
-     * @param string $sales_id Sales ID
-     * @param string $product_variation_id Product Variation ID
+     * Displays a single ProductsCategories model.
+     * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($sales_id, $product_variation_id)
+    public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($sales_id, $product_variation_id),
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new SalesProducts model.
+     * Creates a new ProductsCategories model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new SalesProducts();
+        $model = new ProductsCategories();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'sales_id' => $model->sales_id, 'product_variation_id' => $model->product_variation_id]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
@@ -84,19 +83,18 @@ class SalesProductsController extends Controller
     }
 
     /**
-     * Updates an existing SalesProducts model.
+     * Updates an existing ProductsCategories model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $sales_id Sales ID
-     * @param string $product_variation_id Product Variation ID
+     * @param string $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($sales_id, $product_variation_id)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($sales_id, $product_variation_id);
+        $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'sales_id' => $model->sales_id, 'product_variation_id' => $model->product_variation_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -105,31 +103,29 @@ class SalesProductsController extends Controller
     }
 
     /**
-     * Deletes an existing SalesProducts model.
+     * Deletes an existing ProductsCategories model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $sales_id Sales ID
-     * @param string $product_variation_id Product Variation ID
+     * @param string $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($sales_id, $product_variation_id)
+    public function actionDelete($id)
     {
-        $this->findModel($sales_id, $product_variation_id)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the SalesProducts model based on its primary key value.
+     * Finds the ProductsCategories model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $sales_id Sales ID
-     * @param string $product_variation_id Product Variation ID
-     * @return SalesProducts the loaded model
+     * @param string $id ID
+     * @return ProductsCategories the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($sales_id, $product_variation_id)
+    protected function findModel($id)
     {
-        if (($model = SalesProducts::findOne(['sales_id' => $sales_id, 'product_variation_id' => $product_variation_id])) !== null) {
+        if (($model = ProductsCategories::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\settings\configurations;
 
-use backend\models\Companies;
-use backend\models\CompaniesSearch;
+use backend\models\Taxes;
+use backend\models\TaxesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * CompaniesController implements the CRUD actions for Companies model.
+ * TaxesController implements the CRUD actions for Taxes model.
  */
-class CompaniesController extends Controller
+class TaxController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class CompaniesController extends Controller
     }
 
     /**
-     * Lists all Companies models.
+     * Lists all Taxes models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new CompaniesSearch();
+        $searchModel = new TaxesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class CompaniesController extends Controller
     }
 
     /**
-     * Displays a single Companies model.
+     * Displays a single Taxes model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class CompaniesController extends Controller
     }
 
     /**
-     * Creates a new Companies model.
+     * Creates a new Taxes model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Companies();
+        $model = new Taxes();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class CompaniesController extends Controller
     }
 
     /**
-     * Updates an existing Companies model.
+     * Updates an existing Taxes model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class CompaniesController extends Controller
     }
 
     /**
-     * Deletes an existing Companies model.
+     * Deletes an existing Taxes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class CompaniesController extends Controller
     }
 
     /**
-     * Finds the Companies model based on its primary key value.
+     * Finds the Taxes model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return Companies the loaded model
+     * @return Taxes the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Companies::findOne(['id' => $id])) !== null) {
+        if (($model = Taxes::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\stores\materials;
 
-use backend\models\RawItemsCategories;
-use backend\models\RawItemsCategoriesSearch;
+use backend\models\RawItemsBrands;
+use backend\models\RawItemsBrandsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * RawItemsCategoriesController implements the CRUD actions for RawItemsCategories model.
+ * RawItemsBrandsController implements the CRUD actions for RawItemsBrands model.
  */
-class RawItemsCategoriesController extends Controller
+class BrandsController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class RawItemsCategoriesController extends Controller
     }
 
     /**
-     * Lists all RawItemsCategories models.
+     * Lists all RawItemsBrands models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new RawItemsCategoriesSearch();
+        $searchModel = new RawItemsBrandsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class RawItemsCategoriesController extends Controller
     }
 
     /**
-     * Displays a single RawItemsCategories model.
+     * Displays a single RawItemsBrands model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class RawItemsCategoriesController extends Controller
     }
 
     /**
-     * Creates a new RawItemsCategories model.
+     * Creates a new RawItemsBrands model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new RawItemsCategories();
+        $model = new RawItemsBrands();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class RawItemsCategoriesController extends Controller
     }
 
     /**
-     * Updates an existing RawItemsCategories model.
+     * Updates an existing RawItemsBrands model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class RawItemsCategoriesController extends Controller
     }
 
     /**
-     * Deletes an existing RawItemsCategories model.
+     * Deletes an existing RawItemsBrands model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class RawItemsCategoriesController extends Controller
     }
 
     /**
-     * Finds the RawItemsCategories model based on its primary key value.
+     * Finds the RawItemsBrands model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return RawItemsCategories the loaded model
+     * @return RawItemsBrands the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = RawItemsCategories::findOne(['id' => $id])) !== null) {
+        if (($model = RawItemsBrands::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -240,17 +240,17 @@ AppAsset::register($this);
                                         <div class="collapse" id="products">
                                             <ul class="nav flex-column ms-3">
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/selling-point/products/brands">
+                                                    <a class="nav-link" aria-current="page" href="/sellingpoint/products/brands">
                                                         <i class="fa fa-font-awesome fa-fw fa-sm"></i><span class="nav-link-text">Brands</span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/selling-point/products/categories">
+                                                    <a class="nav-link" aria-current="page" href="/sellingpoint/products/categories">
                                                         <i class="fa fa-sitemap fa-fw fa-sm"></i><span class="nav-link-text">Categories</span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/selling-point/products">
+                                                    <a class="nav-link" aria-current="page" href="/sellingpoint/products/products">
                                                         <i class="fa fa-cube fa-fw fa-sm"></i><span class="nav-link-text">Products</span>
                                                     </a>
                                                 </li>
@@ -264,17 +264,17 @@ AppAsset::register($this);
                                         <div class="collapse" id="sellingPointTransfers">
                                             <ul class="nav flex-column ms-3">
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/selling-point/transfer/request">
+                                                    <a class="nav-link" aria-current="page" href="/sellingpoint/transfer/request">
                                                         <i class="fa fa-question fa-fw fa-sm"></i><span class="nav-link-text">Request</span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/selling-point/transfer/receive">
+                                                    <a class="nav-link" aria-current="page" href="/sellingpoint/transfer/receive">
                                                         <i class="fa fa-sitemap fa-fw fa-sm"></i><span class="nav-link-text">Receive</span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/selling-point/transfer/return">
+                                                    <a class="nav-link" aria-current="page" href="/sellingpoint/transfer/return">
                                                         <i class="fa fa-user-secret fa-fw fa-sm"></i><span class="nav-link-text">Return</span>
                                                     </a>
                                                 </li>
@@ -282,12 +282,12 @@ AppAsset::register($this);
                                         </div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" aria-current="page" href="/selling-point/sales">
+                                        <a class="nav-link" aria-current="page" href="/sellingpoint/sales">
                                             <i class="fa fa-shopping-basket fa-fw fa-sm"></i><span class="nav-link-text">Sales</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" aria-current="page" href="/selling-point/customers">
+                                        <a class="nav-link" aria-current="page" href="/sellingpoint/customers">
                                             <i class="fa fa-users fa-fw fa-sm"></i><span class="nav-link-text">Customers</span>
                                         </a>
                                     </li>
@@ -391,7 +391,7 @@ AppAsset::register($this);
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/settings/configurations/smtp-mail">
+                                                    <a class="nav-link" aria-current="page" href="/settings/configurations/smtpmail">
                                                         <i class="fa fa-envelope fa-fw fa-sm"></i><span class="nav-link-text">SMTP Mail</span>
                                                     </a>
                                                 </li>

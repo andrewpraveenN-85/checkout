@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\settings\configurations;
 
-use backend\models\RawItems;
-use backend\models\RawItemsSearch;
+use backend\models\CompanyFeatures;
+use backend\models\CompanyFeaturesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * RawItemsController implements the CRUD actions for RawItems model.
+ * CompanyFeaturesController implements the CRUD actions for CompanyFeatures model.
  */
-class RawItemsController extends Controller
+class FeaturesController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class RawItemsController extends Controller
     }
 
     /**
-     * Lists all RawItems models.
+     * Lists all CompanyFeatures models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new RawItemsSearch();
+        $searchModel = new CompanyFeaturesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class RawItemsController extends Controller
     }
 
     /**
-     * Displays a single RawItems model.
+     * Displays a single CompanyFeatures model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class RawItemsController extends Controller
     }
 
     /**
-     * Creates a new RawItems model.
+     * Creates a new CompanyFeatures model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new RawItems();
+        $model = new CompanyFeatures();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class RawItemsController extends Controller
     }
 
     /**
-     * Updates an existing RawItems model.
+     * Updates an existing CompanyFeatures model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class RawItemsController extends Controller
     }
 
     /**
-     * Deletes an existing RawItems model.
+     * Deletes an existing CompanyFeatures model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class RawItemsController extends Controller
     }
 
     /**
-     * Finds the RawItems model based on its primary key value.
+     * Finds the CompanyFeatures model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return RawItems the loaded model
+     * @return CompanyFeatures the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = RawItems::findOne(['id' => $id])) !== null) {
+        if (($model = CompanyFeatures::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

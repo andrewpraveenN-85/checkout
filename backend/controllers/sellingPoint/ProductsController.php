@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\sellingPoint;
 
-use backend\models\ProductsCategories;
-use backend\models\ProductsCategoriesSearch;
+use backend\models\Products;
+use backend\models\ProductsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProductsCategoriesController implements the CRUD actions for ProductsCategories model.
+ * ProductsController implements the CRUD actions for Products model.
  */
-class ProductsCategoriesController extends Controller
+class ProductsController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class ProductsCategoriesController extends Controller
     }
 
     /**
-     * Lists all ProductsCategories models.
+     * Lists all Products models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new ProductsCategoriesSearch();
+        $searchModel = new ProductsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class ProductsCategoriesController extends Controller
     }
 
     /**
-     * Displays a single ProductsCategories model.
+     * Displays a single Products model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class ProductsCategoriesController extends Controller
     }
 
     /**
-     * Creates a new ProductsCategories model.
+     * Creates a new Products model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new ProductsCategories();
+        $model = new Products();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class ProductsCategoriesController extends Controller
     }
 
     /**
-     * Updates an existing ProductsCategories model.
+     * Updates an existing Products model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class ProductsCategoriesController extends Controller
     }
 
     /**
-     * Deletes an existing ProductsCategories model.
+     * Deletes an existing Products model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class ProductsCategoriesController extends Controller
     }
 
     /**
-     * Finds the ProductsCategories model based on its primary key value.
+     * Finds the Products model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return ProductsCategories the loaded model
+     * @return Products the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ProductsCategories::findOne(['id' => $id])) !== null) {
+        if (($model = Products::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

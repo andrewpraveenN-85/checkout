@@ -1,17 +1,17 @@
 <?php
+  
+namespace backend\controllers\sellingpoint\products;
 
-namespace backend\controllers;
-
-use backend\models\CompanyFeatures;
-use backend\models\CompanyFeaturesSearch;
+use backend\models\ProductsBrands;
+use backend\models\ProductsBrandsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * CompanyFeaturesController implements the CRUD actions for CompanyFeatures model.
+ * ProductsBrandsController implements the CRUD actions for ProductsBrands model.
  */
-class CompanyFeaturesController extends Controller
+class BrandsController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class CompanyFeaturesController extends Controller
     }
 
     /**
-     * Lists all CompanyFeatures models.
+     * Lists all ProductsBrands models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new CompanyFeaturesSearch();
+        $searchModel = new ProductsBrandsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class CompanyFeaturesController extends Controller
     }
 
     /**
-     * Displays a single CompanyFeatures model.
+     * Displays a single ProductsBrands model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class CompanyFeaturesController extends Controller
     }
 
     /**
-     * Creates a new CompanyFeatures model.
+     * Creates a new ProductsBrands model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new CompanyFeatures();
+        $model = new ProductsBrands();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class CompanyFeaturesController extends Controller
     }
 
     /**
-     * Updates an existing CompanyFeatures model.
+     * Updates an existing ProductsBrands model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class CompanyFeaturesController extends Controller
     }
 
     /**
-     * Deletes an existing CompanyFeatures model.
+     * Deletes an existing ProductsBrands model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class CompanyFeaturesController extends Controller
     }
 
     /**
-     * Finds the CompanyFeatures model based on its primary key value.
+     * Finds the ProductsBrands model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return CompanyFeatures the loaded model
+     * @return ProductsBrands the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = CompanyFeatures::findOne(['id' => $id])) !== null) {
+        if (($model = ProductsBrands::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

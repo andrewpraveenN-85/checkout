@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\sellingPoint;	
 
-use backend\models\SmtpConfigurations;
-use backend\models\SmtpConfigurationsSearch;
+use backend\models\Sales;
+use backend\models\SalesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SmtpConfigurationsController implements the CRUD actions for SmtpConfigurations model.
+ * SalesController implements the CRUD actions for Sales model.
  */
-class SmtpConfigurationsController extends Controller
+class SalesController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class SmtpConfigurationsController extends Controller
     }
 
     /**
-     * Lists all SmtpConfigurations models.
+     * Lists all Sales models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new SmtpConfigurationsSearch();
+        $searchModel = new SalesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class SmtpConfigurationsController extends Controller
     }
 
     /**
-     * Displays a single SmtpConfigurations model.
+     * Displays a single Sales model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class SmtpConfigurationsController extends Controller
     }
 
     /**
-     * Creates a new SmtpConfigurations model.
+     * Creates a new Sales model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new SmtpConfigurations();
+        $model = new Sales();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class SmtpConfigurationsController extends Controller
     }
 
     /**
-     * Updates an existing SmtpConfigurations model.
+     * Updates an existing Sales model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class SmtpConfigurationsController extends Controller
     }
 
     /**
-     * Deletes an existing SmtpConfigurations model.
+     * Deletes an existing Sales model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class SmtpConfigurationsController extends Controller
     }
 
     /**
-     * Finds the SmtpConfigurations model based on its primary key value.
+     * Finds the Sales model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return SmtpConfigurations the loaded model
+     * @return Sales the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = SmtpConfigurations::findOne(['id' => $id])) !== null) {
+        if (($model = Sales::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\settings\configurations;
 
-use backend\models\Purchases;
-use backend\models\PurchasesSearch;
+use backend\models\SmtpConfigurations;
+use backend\models\SmtpConfigurationsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PurchasesController implements the CRUD actions for Purchases model.
+ * SmtpConfigurationsController implements the CRUD actions for SmtpConfigurations model.
  */
-class PurchasesController extends Controller
+class SmtpmailController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class PurchasesController extends Controller
     }
 
     /**
-     * Lists all Purchases models.
+     * Lists all SmtpConfigurations models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new PurchasesSearch();
+        $searchModel = new SmtpConfigurationsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class PurchasesController extends Controller
     }
 
     /**
-     * Displays a single Purchases model.
+     * Displays a single SmtpConfigurations model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class PurchasesController extends Controller
     }
 
     /**
-     * Creates a new Purchases model.
+     * Creates a new SmtpConfigurations model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Purchases();
+        $model = new SmtpConfigurations();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class PurchasesController extends Controller
     }
 
     /**
-     * Updates an existing Purchases model.
+     * Updates an existing SmtpConfigurations model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class PurchasesController extends Controller
     }
 
     /**
-     * Deletes an existing Purchases model.
+     * Deletes an existing SmtpConfigurations model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class PurchasesController extends Controller
     }
 
     /**
-     * Finds the Purchases model based on its primary key value.
+     * Finds the SmtpConfigurations model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return Purchases the loaded model
+     * @return SmtpConfigurations the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Purchases::findOne(['id' => $id])) !== null) {
+        if (($model = SmtpConfigurations::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\controllers\settings\configurations;
 
-use backend\models\RawItemsBrands;
-use backend\models\RawItemsBrandsSearch;
+use backend\models\Companies;
+use backend\models\CompaniesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * RawItemsBrandsController implements the CRUD actions for RawItemsBrands model.
+ * CompaniesController implements the CRUD actions for Companies model.
  */
-class RawItemsBrandsController extends Controller
+class CompanyController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +32,13 @@ class RawItemsBrandsController extends Controller
     }
 
     /**
-     * Lists all RawItemsBrands models.
+     * Lists all Companies models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new RawItemsBrandsSearch();
+        $searchModel = new CompaniesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +48,7 @@ class RawItemsBrandsController extends Controller
     }
 
     /**
-     * Displays a single RawItemsBrands model.
+     * Displays a single Companies model.
      * @param string $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -61,13 +61,13 @@ class RawItemsBrandsController extends Controller
     }
 
     /**
-     * Creates a new RawItemsBrands model.
+     * Creates a new Companies model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new RawItemsBrands();
+        $model = new Companies();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,7 +83,7 @@ class RawItemsBrandsController extends Controller
     }
 
     /**
-     * Updates an existing RawItemsBrands model.
+     * Updates an existing Companies model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id ID
      * @return string|\yii\web\Response
@@ -103,7 +103,7 @@ class RawItemsBrandsController extends Controller
     }
 
     /**
-     * Deletes an existing RawItemsBrands model.
+     * Deletes an existing Companies model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id ID
      * @return \yii\web\Response
@@ -117,15 +117,15 @@ class RawItemsBrandsController extends Controller
     }
 
     /**
-     * Finds the RawItemsBrands model based on its primary key value.
+     * Finds the Companies model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id ID
-     * @return RawItemsBrands the loaded model
+     * @return Companies the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = RawItemsBrands::findOne(['id' => $id])) !== null) {
+        if (($model = Companies::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
