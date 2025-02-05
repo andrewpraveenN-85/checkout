@@ -35,46 +35,50 @@ use backend\models\Sales;
  * @property string $status
  * @property string $created_at
  * @property string $updated_at
+ * @property int|null $role_id
  *
  * @property Companies $company
  * @property Roles[] $roles
  * @property Sales[] $sales
  * @property Sales[] $sales0
- * @property UsersRoles[] $usersRoles
  */
-class Users extends \yii\db\ActiveRecord implements IdentityInterface {
+class Users extends \yii\db\ActiveRecord implements IdentityInterface
+{
 
     public $picture;
     public $password;
     public $newpassword;
-    public $role_name;
 
     /**
      * {@inheritdoc}
      */
-    public static function tableName() {
+    public static function tableName()
+    {
         return 'users';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules() {
+    public function rules()
+    {
         return [
-            [['password', 'newpassword', 'date_of_birth', 'password_hash', 'email', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city', 'state', 'country', 'postal_code', 'profile_picture', 'picture', 'company_id', 'role_name'], 'safe'],
+            [['password', 'newpassword', 'date_of_birth', 'password_hash', 'email', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city', 'state', 'country', 'postal_code', 'profile_picture', 'picture', 'company_id', 'role_name', 'role_id'], 'safe'],
             [['user_type', 'status'], 'string'],
-            [['company_id'], 'integer'],
+            [['company_id', 'role_id'], 'integer'],
             [['address', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city', 'state', 'country', 'postal_code', 'profile_picture', 'email', 'password_hash', 'password_reset_token', 'verification_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['email'], 'unique'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Companies::class, 'targetAttribute' => ['company_id' => 'id']],
+            [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Roles::class, 'targetAttribute' => ['role_id' => 'id']],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return [
             'first_name' => 'First Name',
             'middle_name' => 'Middle Name',
@@ -95,20 +99,23 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
             'created_at' => 'Created',
             'updated_at' => 'Updated',
             'role_name' => 'Role',
+            'role_id' => 'Role',
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentity($id) {
+    public static function findIdentity($id)
+    {
         return static::findOne(['id' => $id, 'status' => 'active']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentityByAccessToken($token, $type = null) {
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
@@ -118,7 +125,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      * @param string $email
      * @return static|null
      */
-    public static function findByEmail($email) {
+    public static function findByEmail($email)
+    {
         return static::findOne(['email' => $email, 'status' => 'active']);
     }
 
@@ -128,14 +136,15 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      * @param string $token password reset token
      * @return static|null
      */
-    public static function findByPasswordResetToken($token) {
+    public static function findByPasswordResetToken($token)
+    {
         if (!static::isPasswordResetTokenValid($token)) {
             return null;
         }
 
         return static::findOne([
-                    'password_reset_token' => $token,
-                    'status' => 'active',
+            'password_reset_token' => $token,
+            'status' => 'active',
         ]);
     }
 
@@ -145,10 +154,11 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token) {
+    public static function findByVerificationToken($token)
+    {
         return static::findOne([
-                    'verification_token' => $token,
-                    'status' => 'inactive'
+            'verification_token' => $token,
+            'status' => 'inactive'
         ]);
     }
 
@@ -158,7 +168,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      * @param string $token password reset token
      * @return bool
      */
-    public static function isPasswordResetTokenValid($token) {
+    public static function isPasswordResetTokenValid($token)
+    {
         if (empty($token)) {
             return false;
         }
@@ -171,21 +182,24 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
     /**
      * {@inheritdoc}
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->getPrimaryKey();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAuthKey() {
+    public function getAuthKey()
+    {
         return $this->auth_key;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAuthKey($authKey) {
+    public function validateAuthKey($authKey)
+    {
         return $this->getAuthKey() === $authKey;
     }
 
@@ -195,7 +209,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password) {
+    public function validatePassword($password)
+    {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
@@ -204,35 +219,40 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      *
      * @param string $password
      */
-    public function setPassword($password) {
+    public function setPassword($password)
+    {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 
     /**
      * Generates "remember me" authentication key
      */
-    public function generateAuthKey() {
+    public function generateAuthKey()
+    {
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
     /**
      * Generates new password reset token
      */
-    public function generatePasswordResetToken() {
+    public function generatePasswordResetToken()
+    {
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
      * Generates new token for email verification
      */
-    public function generateEmailVerificationToken() {
+    public function generateEmailVerificationToken()
+    {
         $this->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
      * Removes password reset token
      */
-    public function removePasswordResetToken() {
+    public function removePasswordResetToken()
+    {
         $this->password_reset_token = null;
     }
 
@@ -241,7 +261,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCompany() {
+    public function getCompany()
+    {
         return $this->hasOne(Companies::class, ['id' => 'company_id']);
     }
 
@@ -250,7 +271,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getRoles() {
+    public function getRoles()
+    {
         return $this->hasMany(Roles::class, ['id' => 'role_id'])->viaTable('users_roles', ['user_id' => 'id']);
     }
 
@@ -259,7 +281,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getSales() {
+    public function getSales()
+    {
         return $this->hasMany(Sales::class, ['customer_id' => 'id']);
     }
 
@@ -268,7 +291,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getSales0() {
+    public function getSales0()
+    {
         return $this->hasMany(Sales::class, ['employee_id' => 'id']);
     }
 
@@ -277,28 +301,48 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface {
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersRoles() {
-        return $this->hasMany(UsersRoles::class, ['user_id' => 'id']);
+    // public function getUsersRoles()
+    // {
+    //     return $this->hasMany(UsersRoles::class, ['user_id' => 'id']);
+    // }
+    public function getRole()
+    {
+        return $this->hasOne(Roles::class, ['id' => 'role_id']);
     }
 
-    public function hasAccess($permission_name) {
-        $roles = $this->roles; // Get user roles through the relation
-        foreach ($roles as $role) {
+    // public function hasAccess($permission_name)
+    // {
+    //     $roles = $this->roles; // Get user roles through the relation
+    //     foreach ($roles as $role) {
+    //         foreach ($role->permissions as $permission) {
+    //             if ($permission->name === $permission_name && $permission->status === 'active') {
+    //                 return true; // Permission granted
+    //             }
+    //         }
+    //     }
+    //     return false; // No permission found
+    // }
+    public function hasAccess($permission_name)
+    {
+        $role = $this->role_id ? Roles::findOne($this->role_id) : null;
+        if ($role) {
             foreach ($role->permissions as $permission) {
                 if ($permission->name === $permission_name && $permission->status === 'active') {
-                    return true; // Permission granted
+                    return true;
                 }
             }
         }
-        return false; // No permission found
+        return false;
     }
 
-    public function getRoleNames() {
-        return implode(', ', \yii\helpers\ArrayHelper::getColumn($this->roles, 'name'));
-    }
+    // public function getRoleNames()
+    // {
+    //     return implode(', ', \yii\helpers\ArrayHelper::getColumn($this->roles, 'name'));
+    // }
 
-    public function afterFind() {
-        parent::afterFind();
-        $this->role_name = $this->getRoleNames(); // Assign role name to the public property
-    }
+    // public function afterFind()
+    // {
+    //     parent::afterFind();
+    //     $this->role_name = $this->getRoleNames(); // Assign role name to the public property
+    // }
 }

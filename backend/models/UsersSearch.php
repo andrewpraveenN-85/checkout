@@ -11,12 +11,13 @@ use common\models\Users;
  */
 class UsersSearch extends Users {
 
+    public $role_name;
     /**
      * {@inheritdoc}
      */
     public function rules() {
         return [
-            [['id', 'company_id'], 'integer'],
+            [['id', 'company_id', 'role_name'], 'integer'],
             [['first_name', 'contact_number', 'user_type', 'email', 'status', 'role_name'], 'safe'],
         ];
     }
@@ -65,13 +66,13 @@ class UsersSearch extends Users {
         $query->andFilterWhere([
             'u.id' => $this->id,
             'u.company_id' => $this->company_id, // Now works because 'u' alias is set
+            'u.role_id' => $this->role_id,
         ]);
 
         $query->andFilterWhere(['like', 'u.first_name', $this->first_name])
                 ->andFilterWhere(['like', 'u.contact_number', $this->contact_number])
                 ->andFilterWhere(['like', 'u.email', $this->email])
-                ->andFilterWhere(['like', 'u.status', $this->status])
-                ->andFilterWhere(['roles.id' => $this->role_name]); // Filtering by role name
+                ->andFilterWhere(['like', 'u.status', $this->status]); // Filtering by role name
 
         return $dataProvider;
     }
