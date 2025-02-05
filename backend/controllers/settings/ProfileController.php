@@ -33,39 +33,93 @@ class ProfileController extends Controller {
         }
     }
 
+    // public function actionProfilePicture() {
+    //     $model = $this->findModel(Yii::$app->user->id);
+    //     $company = Companies::findOne(['id' => $model->company_id]);
+    //     $companyDir = Yii::$app->params['uploadPathIMG'] . $company->name;
+    //     if ($this->request->isPost && $model->load($this->request->post())) {
+    //         $name = $model->id . "_profile_picture";
+    //         $image = UploadedFile::getInstance($model, 'picture');
+    //         if (!empty($image)) {
+    //             $upload = $companyDir . '/' . $name . '.' . $image->getExtension();
+    //             $image->saveAs($upload);
+    //             $model->profile_picture = 'storage/' . $company->name . '/' . $name . '.' . $image->getExtension();
+    //             if ($model->save(false)) {
+    //                 Yii::$app->session->setFlash('success', 'Profile picture updated.');
+    //                 return $this->redirect(['index']);
+    //             }
+    //         } else {
+    //             return $this->redirect(['index']);
+    //         }
+    //     }
+    // }
+
     public function actionProfilePicture() {
         $model = $this->findModel(Yii::$app->user->id);
         $company = Companies::findOne(['id' => $model->company_id]);
-        $companyDir = Yii::$app->params['uploadPathIMG'] . $company->name;
+    
+        // Define storage directory path
+        $companyDir = Yii::$app->params['uploadPathIMG'] . '/' . $company->name;
+    
+        // Create directory if it does not exist
+        if (!is_dir($companyDir)) {
+            mkdir($companyDir, 0777, true); // Recursive directory creation with full permissions
+        }
+    
         if ($this->request->isPost && $model->load($this->request->post())) {
             $name = $model->id . "_profile_picture";
             $image = UploadedFile::getInstance($model, 'picture');
+    
             if (!empty($image)) {
-                $upload = $companyDir . '/' . $name . '.' . $image->getExtension();
-                $image->saveAs($upload);
-                $model->profile_picture = 'storage/' . $company->name . '/' . $name . '.' . $image->getExtension();
-                if ($model->save(false)) {
-                    Yii::$app->session->setFlash('success', 'Profile picture updated.');
-                    return $this->redirect(['index']);
+                $uploadPath = $companyDir . '/' . $name . '.' . $image->getExtension();
+                
+                // Move file to the storage directory
+                if ($image->saveAs($uploadPath)) {
+                    $model->profile_picture = 'storage/' . $company->name . '/' . $name . '.' . $image->getExtension();
+                    
+                    if ($model->save(false)) {
+                        Yii::$app->session->setFlash('success', 'Profile picture updated.');
+                        return $this->redirect(['index']);
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Failed to upload profile picture.');
                 }
             } else {
-                return $this->redirect(['index']);
+                Yii::$app->session->setFlash('error', 'No image selected.');
             }
         }
+        return $this->redirect(['index']);
     }
+    
+
+
 
     public function actionPassword() {
         $model = $this->findModel(Yii::$app->user->id);
+    
         if ($this->request->isPost && $model->load($this->request->post())) {
-            if($model->validatePassword($model->password)){
-                $model->setPassword($model->newpassword);
-                if ($model->save(false)) {
-                    Yii::$app->session->setFlash('success', 'Password updated.');
-                    return $this->redirect(['index']);
-                }
+            
+            // Check if old password is correct
+            if (!$model->validatePassword($model->password)) {
+                Yii::$app->session->setFlash('error', 'Incorrect current password.');
+                return $this->redirect(['index']); // Redirect back to profile
             }
+    
+            // Update password if old password is correct
+            $model->setPassword($model->newpassword);
+            if ($model->save(false)) {
+                Yii::$app->session->setFlash('success', 'Password updated successfully.');
+                return $this->redirect(['index']);
+            }
+    
+            Yii::$app->session->setFlash('error', 'Failed to update password.');
         }
+    
+        return $this->redirect(['index']);
     }
+    
+
+    
 
     private function getCountries() {
         $countries = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries/positions');

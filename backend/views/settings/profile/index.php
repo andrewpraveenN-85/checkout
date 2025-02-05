@@ -5,233 +5,257 @@ use yii\helpers\Url;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 
-/** @var yii\web\View $this */
-/** @var backend\models\UsersSearch $searchModel */
-/** @var yii\data\ActiveDataProvider $dataProvider */
 $this->title = 'Profile';
 $this->params['breadcrumbs'][] = 'Settings';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="users-index">
+    <div class="row mt-5 mb-5">
+        <div class="col-3 text-center"></div>
+        <div class="col-6 text-center">
+            
+            <div class="card shadow bg-white rounded"> 
+                <div class="card-title p-4"><h3>Profile</h3></div>
+            </div>
 
+        </div>  
+        <div class="col-3 text-center"></div>
+    </div>
+</div>
+
+<div class="users-index">
     <div class="row">
-        <div class="col-3">
-            <?php $formProfilePicture = ActiveForm::begin(['action' => ['profile-picture'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
-            <picture>
-                <img src="<?= Yii::$app->request->hostInfo . '/' . $model->profile_picture; ?>" class="img-fluid img-thumbnail">
-            </picture>
-            <?= $formProfilePicture->field($model, 'picture')->fileInput(['placeholder' => 'Upload your logo',])->label(false) ?>
-            <div class="form-group">
-                <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <div class="col-4 text-center">
+            <div class="profile-container position-relative">
+                <?php $formProfilePicture = ActiveForm::begin(['action' => ['profile-picture'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
+                <div class="profile-img-container">
+                    <img src="<?= Yii::$app->request->hostInfo . '/' . $model->profile_picture; ?>" class="rounded-circle img-fluid shadow" style="width: 150px; height: 150px; object-fit: cover;">
+                    <label for="profile-upload" class="edit-icon">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <?= $formProfilePicture->field($model, 'picture')->fileInput(['id' => 'profile-upload', 'class' => 'd-none'])->label(false) ?>
+                </div>
+                <div class="mt-2">
+                    <?= Html::submitButton('Save', ['class' => 'btn btn-primary btn-sm']) ?>
+                </div>
+                <?php ActiveForm::end(); ?>
             </div>
-
-            <?php ActiveForm::end(); ?>
         </div>
-        <div class="col-5">
-            <?php $formProfile = ActiveForm::begin(['action' => ['profile']]); ?>
 
-            <?=
-            $formProfile->field($model, 'first_name')->textInput([
-                'maxlength' => true,
-                'placeholder' => 'Enter your name',])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'middle_name')->textInput([
-                'maxlength' => true,
-                'placeholder' => 'Enter your name',])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'last_name')->textInput([
-                'maxlength' => true,
-                'placeholder' => 'Enter your name',])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'date_of_birth')->textInput([
-                'type' => 'date', // Use date picker for better UX
-                'placeholder' => 'Select the date of establishment',
-                'max' => date('Y-m-d') // Restrict date selection to today or earlier
-            ])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'contact_number')->textInput([
-                'maxlength' => 15, // For a standard phone number format
-                'placeholder' => 'Enter your phone number',
-                'pattern' => '^\+?[0-9]*$', // This allows optional '+' at the start and only numbers
-            ])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'email')->textInput([
-                'maxlength' => true,
-                'placeholder' => 'Enter your email address',
-                'type' => 'email', // Ensures browser validation for email
-            ])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'address')->textInput([
-                'maxlength' => true,
-                'placeholder' => 'Enter your address',
-            ])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'city')->dropDownList($cities, [
-                'prompt' => 'Select...',
-                'id' => 'city-dropdown'
-            ])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'state')->dropDownList($states, [
-                'prompt' => 'Select...',
-                'id' => 'state-dropdown'
-            ])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'country')->dropDownList($countries, [
-                'prompt' => 'Select...',
-                'id' => 'country-dropdown',
-                'onchange' => '$.get("' . Url::to(["get-states-cities"]) . '?country=" + $(this).val(), function(data) {
-                    var response = JSON.parse(data); 
-                    $("#state-dropdown").html(response.states); 
-                    $("#city-dropdown").html(response.cities);
-                    alert();
-                });'
-            ])
-            ?>
-
-            <?=
-            $formProfile->field($model, 'postal_code')->textInput([
-                'maxlength' => true,
-                'id' => 'postal-code',
-                'placeholder' => 'Enter Postal Code'
-            ])
-            ?>
-
-            <div class="form-group">
-                <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <div class="col-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Details</h5><br>
+                    <p><strong>Name:</strong> <?= $model->first_name . ' ' . $model->middle_name . ' ' . $model->last_name; ?></p>
+                    <p><strong>Email:</strong> <?= $model->email; ?></p>
+                    <p><strong>Phone:</strong> <?= $model->contact_number; ?></p>
+                    <p><strong>Address:</strong> <?= $model->address . ', ' . $model->city . ', ' . $model->state . ', ' . $model->country; ?></p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        Edit Profile
+                    </button>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        Change Password
+                    </button>
+                </div>
             </div>
-
-            <?php ActiveForm::end(); ?>
         </div>
-        <div class="col-4">
-            <?php $formPassword = ActiveForm::begin(['action' => ['password']]); ?>
 
-            <?= $formPassword->field($model, 'password')->passwordInput() ?>
+    </div>
+</div>
 
-            <?=
-            $formPassword->field($model, 'newpassword', [
-                'template' => '{label}<div class="input-group">{input}<button type="button" id="generate-password" class="btn btn-outline-secondary"><i class="fa fa-random"></i></button></div>{error}'
-            ])->passwordInput(['id' => 'signupform-password', 'placeholder' => 'Enter 8+ character password'])
-            ?>
-
-            <div class="form-group">
-                <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+<!-- Profile Edit Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <div class="modal-body">
+                <?php $formProfile = ActiveForm::begin(['action' => ['profile']]); ?>
+                <?= $formProfile->field($model, 'first_name')->textInput(['placeholder' => 'First Name']) ?>
+                <?= $formProfile->field($model, 'middle_name')->textInput(['placeholder' => 'Middle Name']) ?>
+                <?= $formProfile->field($model, 'last_name')->textInput(['placeholder' => 'Last Name']) ?>
+                <?= $formProfile->field($model, 'email')->input('email', ['placeholder' => 'Email']) ?>
+                <?= $formProfile->field($model, 'contact_number')->textInput(['placeholder' => 'Phone Number']) ?>
+                <?= $formProfile->field($model, 'address')->textInput(['placeholder' => 'Address']) ?>
 
-            <?php ActiveForm::end(); ?>
+                <!-- Country, State, and City with AJAX Updating -->
+                <?= $formProfile->field($model, 'country')->dropDownList($countries, [
+                    'prompt' => 'Select Country...',
+                    'id' => 'country-dropdown',
+                    'onchange' => '$.get("' . Url::to(["get-states-cities"]) . '?country=" + $(this).val(), function(data) {
+                        var response = JSON.parse(data); 
+                        $("#state-dropdown").html(response.states); 
+                        $("#city-dropdown").html(response.cities);
+                    });'
+                ]) ?>
+
+                <?= $formProfile->field($model, 'state')->dropDownList($states, [
+                    'prompt' => 'Select State...',
+                    'id' => 'state-dropdown'
+                ]) ?>
+
+                <?= $formProfile->field($model, 'city')->dropDownList($cities, [
+                    'prompt' => 'Select City...',
+                    'id' => 'city-dropdown'
+                ]) ?>
+
+                <?= $formProfile->field($model, 'postal_code')->textInput(['placeholder' => 'Postal Code']) ?>
+
+                <div class="modal-footer">
+                    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                <?php ActiveForm::end(); ?>
+            </div>
         </div>
     </div>
-
 </div>
-<!-- Include JavaScript for Postal Code Validation -->
-<?php
-$this->registerJs(new JsExpression("
-    $(document).ready(function() {
-        var isFormValid = true; // Flag to track form validity
 
-        // Logo Validation
-        document.getElementById('users-picture').addEventListener('change', function(event) {
-            var formGroup = event.target.closest('.form-group');
-            var helpBlock = formGroup.querySelector('.help-block');
-            var input = event.target;
-            var file = event.target.files[0];
-            var allowedExtensions = ['jpg', 'jpeg', 'png'];
-            var maxSize = 1024 * 1024; // 1 MB
-            var minWidth = 100;
-            var maxWidth = 2000;
-            var minHeight = 100;
-            var maxHeight = 2000;
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1">
 
-            // Reset error state
-            formGroup.removeClass('has-error');
-            formGroup.addClass('has-success');
-            helpBlock.textContent = '';
 
-            if (file) {
-                // Check file extension
-                var fileExtension = file.name.split('.').pop().toLowerCase();
-                if (!allowedExtensions.includes(fileExtension)) {
-                    helpBlock.textContent = 'Invalid file type. Only JPG, JPEG, and PNG are allowed.';
-                    formGroup.removeClass('has-success').addClass('has-error');
-                    isFormValid = false; // Set form invalid
-                    return;
-                }
+    <?php if (Yii::$app->session->hasFlash('error')): ?>
+        <div class="alert alert-danger">
+            <?= Yii::$app->session->getFlash('error') ?>
+        </div>
+    <?php endif; ?>
 
-                // Check file size
-                if (file.size < 1024 || file.size > maxSize) {
-                    helpBlock.textContent = 'File size must be between 1 KB and 1 MB.';
-                    formGroup.removeClass('has-success').addClass('has-error');
-                    isFormValid = false; // Set form invalid
-                    return;
-                }
+    <?php if (Yii::$app->session->hasFlash('success')): ?>
+        <div class="alert alert-success">
+            <?= Yii::$app->session->getFlash('success') ?>
+        </div>
+    <?php endif; ?>
 
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var img = new Image();
-                    img.onload = function() {
-                        var width = img.width;
-                        var height = img.height;
 
-                        // Check image dimensions
-                        if (width < minWidth || width > maxWidth || height < minHeight || height > maxHeight) {
-                            helpBlock.textContent = 'Image dimensions must be between ' + minWidth + 'x' + minHeight + ' and ' + maxWidth + 'x' + maxHeight + ' pixels.';
-                            formGroup.removeClass('has-success').addClass('has-error');
-                            isFormValid = false; // Set form invalid
-                            return;
-                        }
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <?php $formPassword = ActiveForm::begin(['action' => ['password']]); ?>
 
-                        // Check if width and height are equal
-                        if (width !== height) {
-                            helpBlock.textContent = 'The image width must be equal to the height.';
-                            formGroup.removeClass('has-success').addClass('has-error');
-                            isFormValid = false; // Set form invalid
-                            return;
-                        }
+                <!-- Current Password Field -->
+                <?= $formPassword->field($model, 'password', [
+                    'template' => '{label}
+                        <div class="input-group">
+                            {input}
+                            <button type="button" class="btn btn-outline-secondary toggle-password">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>{error}',
+                ])->passwordInput(['placeholder' => 'Current Password', 'id' => 'current-password']) ?>
 
-                        // If all validations passed
-                        helpBlock.textContent = ''; // Clear error message
-                        formGroup.removeClass('has-error').addClass('has-success');
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+                <!-- New Password Field -->
+                <?= $formPassword->field($model, 'newpassword', [
+                    'template' => '{label}
+                        <div class="input-group">
+                            {input}
+                            <button type="button" class="btn btn-outline-secondary toggle-password">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>{error}',
+                ])->passwordInput(['placeholder' => 'New Password', 'id' => 'new-password']) ?>
 
-        // Prevent form submission if any validation fails
-        $('#form-signup').on('beforeSubmit', function(e) {
-            if (!isFormValid) {
-                e.preventDefault(); // Prevent form submission if there are errors
-                return false;
-            }
-        });
-        
-        document.getElementById('generate-password').addEventListener('click', function() {
-            let charset = \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+\";
-            let password = \"\";
-            for (let i = 0; i < 12; i++) {
-                password += charset.charAt(Math.floor(Math.random() * charset.length));
-            }
-            document.getElementById('signupform-password').value = password;
-        });
+                <div class="modal-footer">
+                    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                <?php ActiveForm::end(); ?>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+<style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+
+    .profile-container {
+        text-align: center;
+    }
+
+    .profile-img-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .profile-img-container img {
+        border: 4px solid #ddd;
+        transition: all 0.3s ease;
+    }
+
+    .profile-img-container:hover img {
+        border-color: #007bff;
+    }
+
+    .edit-icon {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .edit-icon:hover {
+        background: #007bff;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .card-title {
+        font-weight: bold;
+    }
+
+    .btn {
+        border-radius: 6px;
+    }
+</style>
+
+<script>
+    document.getElementById('profile-upload').addEventListener('change', function() {
+        let file = this.files[0];
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                document.querySelector('.profile-img-container img').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     });
-"));
-?>
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".toggle-password").forEach(button => {
+            button.addEventListener("click", function() {
+                let input = this.previousElementSibling;
+                let icon = this.querySelector("i");
+
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                } else {
+                    input.type = "password";
+                    icon.classList.remove("fa-eye-slash");
+                    icon.classList.add("fa-eye");
+                }
+            });
+        });
+    });
+</script>
+
