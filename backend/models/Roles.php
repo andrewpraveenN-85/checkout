@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use common\models\Users;
 
 /**
  * This is the model class for table "roles".
@@ -74,21 +75,25 @@ class Roles extends \yii\db\ActiveRecord {
         return $this->hasMany(RolesPermissions::class, ['role_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Users]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUsers() {
-        return $this->hasMany(Users::class, ['id' => 'user_id'])->viaTable('users_roles', ['role_id' => 'id']);
-    }
+    // /**
+    //  * Gets query for [[Users]].
+    //  *
+    //  * @return \yii\db\ActiveQuery
+    //  */
+    // public function getUsers() {
+    //     return $this->hasMany(Users::class, ['id' => 'user_id'])->viaTable('users_roles', ['role_id' => 'id']);
+    // }
 
-    /**
-     * Gets query for [[UsersRoles]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUsersRoles() {
-        return $this->hasMany(UsersRoles::class, ['role_id' => 'id']);
+    // /**
+    //  * Gets query for [[UsersRoles]].
+    //  *
+    //  * @return \yii\db\ActiveQuery
+    //  */
+    // public function getUsersRoles() {
+    //     return $this->hasMany(UsersRoles::class, ['role_id' => 'id']);
+    // }
+
+    public function getUsers() {
+        return $this->hasMany(Users::class, ['id'=> 'role_id']);
     }
 }

@@ -11,6 +11,8 @@ use yii\widgets\ActiveForm;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 $this->title = 'Employees';
 $this->params['breadcrumbs'][] = $this->title;
+
+Yii::debug('Available Roles in View: ' . print_r($roles, true));
 ?>
 <div class="users-index">
 
@@ -37,16 +39,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'contact_number',
             'email:email',
             [
-                'attribute' => 'role_name', // Make sure this matches your search model property
+                'attribute' => 'role_name',
                 'label' => 'Role',
-                'value' => function ($data) {
-                    return $data->role_name;
+                'value' => function($model) {
+                    return $model->role ? $model->role->name : ''; 
                 },
                 'filter' => Html::activeDropDownList(
-                        $searchModel,
-                        'role_name',
-                        $roles, // Fetch roles from DB
-                        ['class' => 'form-control', 'prompt' => 'Select']
+                    $searchModel,
+                    'role_id',
+                    $roles,
+                    ['class' => 'form-control', 'prompt' => 'Select']
                 ),
             ],
             [
@@ -55,13 +57,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     return ucfirst($data->status);
                 },
                 'filter' => Html::activeDropDownList(
-                        $searchModel,
-                        'status',
-                        [
-                            'active' => 'Active',
-                            'inactive' => 'Inactive',
-                        ],
-                        ['class' => 'form-control', 'prompt' => 'Select']
+                    $searchModel,
+                    'status',
+                    [
+                        'active' => 'Active',
+                        'inactive' => 'Inactive',
+                    ],
+                    ['class' => 'form-control', 'prompt' => 'Select']
                 ),
             ],
             [
@@ -71,15 +73,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     'custom' => function ($url, $data, $key) {
                         if ($data->id !== Yii::$app->user->id) {
                             return Html::a(
-                                            'Update',
-                                            ['index', 'id' => $data->id],
-                                            [
-                                                'class' => 'btn btn-primary',
-                                                'data' => [
-                                                    'pjax' => 0, // Ensure a full page load instead of PJAX.
-                                                ],
-                                            ]
-                                    );
+                                'Update',
+                                ['index', 'id' => $data->id],
+                                [
+                                    'class' => 'btn btn-primary',
+                                    'data' => [
+                                        'pjax' => 0, // Ensure a full page load instead of PJAX.
+                                    ],
+                                ]
+                            );
                         }
                     },
                 ],
@@ -99,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php $form = ActiveForm::begin(['action' => ['update', 'id' => $model->id], 'options' => ['enctype' => 'multipart/form-data']]); ?>
                 <?php } ?>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><?= $model->isNewRecord ? 'Create Emplyee' : 'Update Employee - ' . Html::encode($model->name) ?></h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><?= $model->isNewRecord ? 'Create Emplyee' : 'Update Employee - ' . Html::encode($model->first_name) ?></h5>
                     <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -108,7 +110,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?=
                             $form->field($model, 'first_name')->textInput([
                                 'maxlength' => true,
-                                'placeholder' => 'Enter your name',])
+                                'placeholder' => 'Enter your name',
+                            ])
                             ?>
                         </div>
                         <div class="mb-3">
@@ -145,6 +148,16 @@ $this->params['breadcrumbs'][] = $this->title;
                             ?>
                         </div>
                         <div class="mb-3">
+                            <?= $form->field($model, 'role_id')->dropDownList(
+                                $roles,
+                                [
+                                    'prompt' => 'Select Role',
+                                    'class' => 'form-control',
+                                    'required' => true,
+                                ]
+                            )->hint('Select a role for the employee') ?>
+                        </div>
+                        <div class="mb-3">
                             <?=
                             $form->field($model, 'password', [
                                 'template' => '{label}<div class="input-group">{input}<button type="button" id="generate-password" class="btn btn-outline-secondary"><i class="fa fa-random"></i></button></div>{error}'
@@ -153,7 +166,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     <?php } else { ?>
                         <div class="mb-3">
-                            <?= $form->field($model, 'status')->dropDownList(['active' => 'Active', 'inactive' => 'Inactive',], ['prompt' => '']) ?>
+                            <?= $form->field($model, 'status')->dropDownList(
+                                ['active' => 'Active', 'inactive' => 'Inactive'],
+                                ['prompt' => '']
+                            ) ?>
+                        </div>
+                        <div class="mb-3">
+                            <?= $form->field($model, 'role_id')->dropDownList(
+                                $roles,
+                                [
+                                    'prompt' => 'Select Role',
+                                    'class' => 'form-control',
+                                    'required' => true,
+                                ]
+                            ) ?>
                         </div>
                     <?php } ?>
                 </div>
