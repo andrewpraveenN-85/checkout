@@ -54,12 +54,12 @@ class MeasurementUnits extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            // 'id' => 'ID',
             'name' => 'Name',
             'status' => 'Status',
-            'company_id' => 'Company ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            // 'company_id' => 'Company ID',
+            // 'created_at' => 'Created At',
+            // 'updated_at' => 'Updated At',
         ];
     }
 

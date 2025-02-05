@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var backend\models\RawItemsBrandsSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Raw Items Brands';
+$this->title = 'Brands';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="raw-items-brands-index">
@@ -27,14 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'name',
             'status',
-            'company_id',
-            'created_at',
-            //'updated_at',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, RawItemsBrands $model, $key, $index, $column) {

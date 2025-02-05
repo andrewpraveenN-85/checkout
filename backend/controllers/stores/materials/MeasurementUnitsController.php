@@ -7,6 +7,7 @@ use backend\models\MeasurementUnitsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * MeasurementUnitsController implements the CRUD actions for MeasurementUnits model.
@@ -68,10 +69,13 @@ class MeasurementUnitsController extends Controller
     public function actionCreate()
     {
         $model = new MeasurementUnits();
-
+        $model->company_id = Yii::$app->user->identity->company_id;
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+
+                Yii::$app->session->setFlash('success', 'Measurement Unit Created.');
                 return $this->redirect(['view', 'id' => $model->id]);
+
             }
         } else {
             $model->loadDefaultValues();
@@ -94,6 +98,7 @@ class MeasurementUnitsController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Measurement Unit Updated.');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -110,9 +115,9 @@ class MeasurementUnitsController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {
+    {   
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', 'Measurement Unit Deleted.');
         return $this->redirect(['index']);
     }
 

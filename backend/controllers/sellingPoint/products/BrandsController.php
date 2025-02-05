@@ -7,6 +7,7 @@ use backend\models\ProductsBrandsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * ProductsBrandsController implements the CRUD actions for ProductsBrands model.
@@ -69,8 +70,13 @@ class BrandsController extends Controller
     {
         $model = new ProductsBrands();
 
+        $model->company_id = Yii::$app->user->identity->company_id;
+
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+
+                Yii::$app->session->setFlash('success', 'Product Brand Created.');
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -94,6 +100,7 @@ class BrandsController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Product Brand updated.');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -112,7 +119,7 @@ class BrandsController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', 'Product Brand Deleted');
         return $this->redirect(['index']);
     }
 

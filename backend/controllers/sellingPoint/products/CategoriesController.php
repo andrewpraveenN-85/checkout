@@ -7,6 +7,7 @@ use backend\models\ProductsCategoriesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * ProductsCategoriesController implements the CRUD actions for ProductsCategories model.
@@ -68,9 +69,12 @@ class CategoriesController extends Controller
     public function actionCreate()
     {
         $model = new ProductsCategories();
-
+        $model->company_id = Yii::$app->user->identity->company_id;
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+
+                Yii::$app->session->setFlash('success', 'Category Created !');
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -92,8 +96,10 @@ class CategoriesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->company_id = Yii::$app->user->identity->company_id;
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Category Updated.');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -112,7 +118,7 @@ class CategoriesController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', 'Category Deleted.');
         return $this->redirect(['index']);
     }
 

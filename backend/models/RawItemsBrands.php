@@ -22,6 +22,7 @@ class RawItemsBrands extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
     public static function tableName()
     {
         return 'raw_items_brands';
@@ -48,12 +49,8 @@ class RawItemsBrands extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
             'name' => 'Name',
             'status' => 'Status',
-            'company_id' => 'Company ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
         ];
     }
 

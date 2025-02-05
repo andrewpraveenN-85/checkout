@@ -7,6 +7,7 @@ use backend\models\RawItemsCategoriesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * RawItemsCategoriesController implements the CRUD actions for RawItemsCategories model.
@@ -69,8 +70,13 @@ class CategoriesController extends Controller
     {
         $model = new RawItemsCategories();
 
+        $model->company_id = Yii::$app->user->identity->company_id;
+
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+
+                Yii::$app->session->setFlash('success', 'Catogory Created.');
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -94,6 +100,9 @@ class CategoriesController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+
+            Yii::$app->session->setFlash('success', 'Catagory updated.');
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -112,7 +121,7 @@ class CategoriesController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', 'Catogory deleted');
         return $this->redirect(['index']);
     }
 
