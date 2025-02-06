@@ -26,22 +26,54 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="users-index">
     <div class="row">
-        <div class="col-4 text-center">
-            <div class="profile-container position-relative">
-                <?php $formProfilePicture = ActiveForm::begin(['action' => ['profile-picture'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
-                <div class="profile-img-container">
-                    <img src="<?= Yii::$app->request->hostInfo . '/' . $model->profile_picture; ?>" class="rounded-circle img-fluid shadow" style="width: 150px; height: 150px; object-fit: cover;">
-                    <label for="profile-upload" class="edit-icon">
-                        <i class="fas fa-camera"></i>
+    <div class="col-4 text-center">
+    <div class="profile-container position-relative d-inline-block">
+        <?php $formProfilePicture = ActiveForm::begin([
+            'action' => ['profile-picture'], 
+            'options' => ['enctype' => 'multipart/form-data']
+        ]); ?>
+
+        <!-- Profile Image Container -->
+            <div class="position-relative d-inline-block rounded-circle overflow-hidden shadow-lg"
+                style="width: 150px; height: 150px; border: 4px solid #ffffff; transition: 0.3s ease-in-out;">
+
+                <!-- Profile Image -->
+                <img src="<?= Yii::$app->request->hostInfo . '/' . ($model->profile_picture ?: 'uploads/default-profile.png'); ?>" 
+                    class="img-fluid rounded-circle w-100 h-100"
+                    style="object-fit: cover; transition: 0.3s ease-in-out;">
+
+                <!-- Hover Overlay -->
+                <div class="profile-hover-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center rounded-circle"
+                    style="background: rgba(0, 0, 0, 0.5); opacity: 0; transition: opacity 0.3s ease-in-out;">
+                    
+                    <!-- Camera Icon -->
+                    <label for="profile-upload" class="position-absolute text-white d-flex align-items-center justify-content-center rounded-circle shadow"
+                        style="width: 45px; height: 45px; background: rgba(255, 255, 255, 0.8); cursor: pointer;">
+                        <i class="fas fa-camera text-dark fs-4"></i>
                     </label>
-                    <?= $formProfilePicture->field($model, 'picture')->fileInput(['id' => 'profile-upload', 'class' => 'd-none'])->label(false) ?>
                 </div>
-                <div class="mt-2">
-                    <?= Html::submitButton('Save', ['class' => 'btn btn-primary btn-sm']) ?>
-                </div>
-                <?php ActiveForm::end(); ?>
             </div>
+
+            <!-- Hidden File Input -->
+            <?= $formProfilePicture->field($model, 'picture')->fileInput([
+                'id' => 'profile-upload', 
+                'class' => 'd-none', 
+                'onchange' => 'this.form.submit();'
+            ])->label(false) ?>
+
+            <!-- Remove Image Button -->
+            <?php if (!empty($model->profile_picture)): ?>
+                <button type="submit" name="remove_picture" value="1" class="btn btn-danger btn-sm mt-2">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            <?php endif; ?>
+
+            <?php ActiveForm::end(); ?>
         </div>
+    </div>
+
+
+
 
         <div class="col-6">
             <div class="card shadow">
@@ -285,3 +317,14 @@ $this->params['breadcrumbs'][] = $this->title;
     });
 </script>
 
+<!-- Custom Styles -->
+<style>
+    /* Hover Effect */
+    .profile-container:hover .profile-hover-overlay {
+        opacity: 1;
+    }
+
+    .profile-container:hover img {
+        filter: brightness(0.7);
+    }
+</style>

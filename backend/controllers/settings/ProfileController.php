@@ -53,30 +53,52 @@ class ProfileController extends Controller {
     //         }
     //     }
     // }
-
+    
     public function actionProfilePicture() {
         $model = $this->findModel(Yii::$app->user->id);
         $company = Companies::findOne(['id' => $model->company_id]);
     
-        // Define storage directory path
-        $companyDir = Yii::$app->params['uploadPathIMG'] . '/' . $company->name;
+        // Ensure the company exists
+        if (!$model || !$company) {
+            Yii::$app->session->setFlash('error', 'Company not found.');
+            return $this->redirect(['index']);
+        }
+    
+        // Define the directory path for uploads
+        $companyDir = Yii::getAlias('@webroot/storage/' . $company->name . '/');
     
         // Create directory if it does not exist
         if (!is_dir($companyDir)) {
-            mkdir($companyDir, 0777, true); // Recursive directory creation with full permissions
+            mkdir($companyDir, 0777, true);
         }
     
-        if ($this->request->isPost && $model->load($this->request->post())) {
-            $name = $model->id . "_profile_picture";
+        if (Yii::$app->request->isPost) {
+            // Handle Image Removal
+            if (Yii::$app->request->post('remove_picture')) {
+                if (!empty($model->profile_picture) && file_exists(Yii::getAlias('@webroot/' . $model->profile_picture))) {
+                    unlink(Yii::getAlias('@webroot/' . $model->profile_picture)); // Delete file from server
+                }
+                $model->profile_picture = null; // Remove from database
+                if ($model->save(false)) {
+                    Yii::$app->session->setFlash('success', 'Profile picture removed.');
+                } else {
+                    Yii::$app->session->setFlash('error', 'Failed to remove profile picture.');
+                }
+                return $this->redirect(['index']);
+            }
+    
+            // Handle Image Upload
             $image = UploadedFile::getInstance($model, 'picture');
     
-            if (!empty($image)) {
-                $uploadPath = $companyDir . '/' . $name . '.' . $image->getExtension();
-                
-                // Move file to the storage directory
+            if ($image) {
+                $imageName = $model->id . "_profile_picture." . $image->getExtension();
+                $uploadPath = $companyDir . $imageName;
+    
+                // Save image to directory
                 if ($image->saveAs($uploadPath)) {
-                    $model->profile_picture = 'storage/' . $company->name . '/' . $name . '.' . $image->getExtension();
-                    
+                    // Save the new image path in the database
+                    $model->profile_picture = 'storage/' . $company->name . '/' . $imageName;
+    
                     if ($model->save(false)) {
                         Yii::$app->session->setFlash('success', 'Profile picture updated.');
                         return $this->redirect(['index']);
@@ -88,8 +110,10 @@ class ProfileController extends Controller {
                 Yii::$app->session->setFlash('error', 'No image selected.');
             }
         }
+    
         return $this->redirect(['index']);
     }
+    
     
 
 

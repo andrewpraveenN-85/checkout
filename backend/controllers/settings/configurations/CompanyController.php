@@ -3,13 +3,15 @@
 namespace backend\controllers\settings\configurations;
 
 use backend\models\Companies;
-use backend\models\CompaniesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\web\UploadedFile;
+use Yii;
 
 /**
- * CompaniesController implements the CRUD actions for Companies model.
+ * CompanyController handles company-related actions, including profile updates and logo uploads.
  */
 class CompanyController extends Controller
 {
@@ -32,93 +34,75 @@ class CompanyController extends Controller
     }
 
     /**
-     * Lists all Companies models.
+     * Lists the company details for the logged-in user.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new CompaniesSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $model = $this->findModel(Yii::$app->user->identity->company_id);
+
+
+        $states = $this->fetchStates($model->country);
+        $cities = $this->fetchCities($model->country);
+        asort($states);
+        asort($cities);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'model' => $model,
+            'countries' => $this->getCountries(),
+            'states' => $this->getDropDownArray($states),
+            'cities' => $this->getDropDownArray($cities),
+            'model' => $model,
         ]);
     }
 
     /**
-     * Displays a single Companies model.
-     * @param string $id ID
-     * @return string
+     * Updates an existing Company model via AJAX request.
+     * If update is successful, the browser remains on the index page.
+     *
+     * @return array
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+    public function actionUpdate()
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
 
-    /**
-     * Creates a new Companies model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Companies();
+            $companyId = Yii::$app->user->identity->company_id;
+            $model = $this->findModel($companyId);
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost) {
+                if ($model->load(Yii::$app->request->post())) {
+
+                    // Handle file upload
+                    $logoFile = UploadedFile::getInstance($model, 'logo');
+                    if ($logoFile) {
+                        $companyDir = Yii::getAlias('@webroot/uploads/company_logos/' . $model->id);
+                        if (!is_dir($companyDir)) {
+                            mkdir($companyDir, 0777, true);
+                        }
+                        $logoPath = $companyDir . '/' . $model->id . '.' . $logoFile->extension;
+                        if ($logoFile->saveAs($logoPath)) {
+                            $model->logo = '/uploads/company_logos/' . $model->id . '.' . $logoFile->extension;
+                        }
+                    }
+
+                    if ($model->validate() && $model->save()) { // 🔹 Fix: Validate before saving
+                        return ['success' => true, 'message' => 'Company details updated successfully.'];
+                    } else {
+                        return ['success' => false, 'errors' => $model->errors];
+                    }
+                }
             }
-        } else {
-            $model->loadDefaultValues();
+
+            return ['success' => false, 'message' => 'Invalid request.'];
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Companies model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Companies model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the Companies model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
+     *
      * @param string $id ID
      * @return Companies the loaded model
      * @throws NotFoundHttpException if the model cannot be found
@@ -129,6 +113,138 @@ class CompanyController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('The requested company does not exist.');
     }
+
+
+    private function fetchStates($country) {
+        $data = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries/states');
+        foreach ($data as $item) {
+            if ($item['iso2'] === $country) {
+                return array_column($item['states'], 'name');
+            }
+        }
+        return [];
+    }
+
+    private function fetchCities($country) {
+        $data = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries');
+        foreach ($data as $item) {
+            if ($item['iso2'] === $country) {
+                return $item['cities'];
+            }
+        }
+        return [];
+    }
+
+    public function actionGetStatesCities($country) {
+        $states = $this->fetchStates($country);
+        $cities = $this->fetchCities($country);
+        asort($states);
+        asort($cities);
+        return json_encode([
+            'states' => $this->getDropDownOptions($states),
+            'cities' => $this->getDropDownOptions($cities)
+        ]);
+    }
+
+    private function getCountries() {
+        $countries = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries/positions');
+
+        $countryList = [];
+        if (!empty($countries)) {
+            foreach ($countries as $country) {
+                $countryList[$country['iso2']] = $country['name'];
+            }
+        }
+        asort($countryList);
+        return $countryList;
+    }
+
+    private function getCountriesNowAPI($url) {
+        $contents = file_get_contents($url);
+        return json_decode($contents, true)['data'];
+    }
+
+    private function getDropDownArray($array) {
+        $options = [];
+        foreach ($array as $value) {
+            $options[htmlspecialchars($value)] = htmlspecialchars($value);
+        }
+        return $options;
+    }
+
+    private function getDropDownOptions($array) {
+        $options = "<option value=''>Select...</option>";
+        foreach ($array as $value) {
+            $options .= "<option value='" . htmlspecialchars($value) . "'>" . htmlspecialchars($value) . "</option>";
+        }
+        return $options;
+    }
+
+
+    public function actionProfilePicture() {
+        $model = $this->findModel(Yii::$app->user->identity->company_id);
+    
+        // Ensure the company exists
+        if (!$model) {
+            Yii::$app->session->setFlash('error', 'Company not found.');
+            return $this->redirect(['index']);
+        }
+    
+        // Define the directory path for uploads
+        $companyDir = Yii::getAlias('@webroot/storage/' . $model->id . '/');
+    
+        // Create directory if it does not exist
+        if (!is_dir($companyDir)) {
+            mkdir($companyDir, 0777, true);
+        }
+    
+        if (Yii::$app->request->isPost) {
+            // Handle Image Removal
+            if (Yii::$app->request->post('remove_logo')) {
+
+                if (!empty($model->logo) && file_exists(Yii::getAlias('@webroot/' . $model->logo))) {
+                    unlink(Yii::getAlias('@webroot/' . $model->logo)); // Delete file from server
+                }
+
+                $model->logo = null; // Remove from database
+
+                if ($model->save(false)) {
+                    Yii::$app->session->setFlash('success', 'Company Logo Removed.');
+                } else {
+                    Yii::$app->session->setFlash('error', 'Failed to remove logo.');
+                }
+
+                return $this->redirect(['index']);
+            }
+    
+            // Handle Image Upload
+            $image = UploadedFile::getInstance($model, 'logo');
+    
+            if ($image) {
+                // Define image name and path
+                $imageName = $model->id . "_logo." . $image->getExtension();
+                $uploadPath = $companyDir . $imageName;
+    
+                // Save image to directory
+                if ($image->saveAs($uploadPath)) {
+                    // Save the new image path in the database
+                    $model->logo = 'storage/' . $model->id . '/' . $imageName;
+    
+                    if ($model->save(false)) {
+                        Yii::$app->session->setFlash('success', 'Company Logo Updated.');
+                        return $this->redirect(['index']);
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Failed to upload logo.');
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'No image selected.');
+            }
+        }
+    
+        return $this->redirect(['index']);
+    }
+    
 }

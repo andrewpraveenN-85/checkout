@@ -396,7 +396,7 @@ AppAsset::register($this);
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/settings/configurations">
+                                                    <a class="nav-link" aria-current="page" href="/settings/configuration">
                                                         <i class="fa fa-cogs fa-fw fa-sm"></i><span class="nav-link-text">Configuration</span>
                                                     </a>
                                                 </li>
