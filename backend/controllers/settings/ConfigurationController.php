@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 /**
  * ConfigurationsController implements the CRUD actions for Configurations model.
  */
-class ConfigurationsController extends Controller
+class ConfigurationController extends Controller
 {
     /**
      * @inheritDoc
