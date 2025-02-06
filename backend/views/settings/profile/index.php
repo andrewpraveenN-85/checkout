@@ -133,10 +133,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="modal-dialog">
         <div class="modal-content">
+
             <div class="modal-header">
                 <h5 class="modal-title">Change Password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+
+
             <div class="modal-body">
                 <?php $formPassword = ActiveForm::begin(['action' => ['password']]); ?>
 
@@ -159,6 +162,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             <button type="button" class="btn btn-outline-secondary toggle-password">
                                 <i class="fa fa-eye"></i>
                             </button>
+                            <button type="button" class="btn btn-outline-secondary generate-password">
+                                <i class="fa fa-key"></i>
+                            </button>
                         </div>{error}',
                 ])->passwordInput(['placeholder' => 'New Password', 'id' => 'new-password']) ?>
 
@@ -168,6 +174,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <?php ActiveForm::end(); ?>
             </div>
+
+
         </div>
     </div>
 </div>
@@ -240,9 +248,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Toggle Password Visibility
         document.querySelectorAll(".toggle-password").forEach(button => {
             button.addEventListener("click", function() {
-                let input = this.previousElementSibling;
+                let input = this.closest(".input-group").querySelector("input");
                 let icon = this.querySelector("i");
 
                 if (input.type === "password") {
@@ -256,6 +265,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             });
         });
+
+        // Generate Random Password
+        document.querySelectorAll(".generate-password").forEach(button => {
+            button.addEventListener("click", function() {
+                let input = this.closest(".input-group").querySelector("input");
+                input.value = generateRandomPassword(12); // Generate a 12-character password
+            });
+        });
+
+        function generateRandomPassword(length) {
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+            let password = "";
+            for (let i = 0; i < length; i++) {
+                password += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return password;
+        }
     });
 </script>
 
