@@ -37,14 +37,19 @@ class CategoriesController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($id = null)
     {
-        $searchModel = new RawItemsCategoriesSearch();
+        $model = $id ? $this->findModel($id) : new RawItemsCategories();
+        
+        $searchModel = new RawItemsCategoriesSearch(['company_id' => Yii::$app->user->identity->company_id]);
+
+
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
@@ -95,20 +100,29 @@ class CategoriesController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    // public function actionUpdate($id)
+    // {
+    //     $model = $this->findModel($id);
+
+    //     if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+
+    //         Yii::$app->session->setFlash('success', 'Catagory updated.');
+
+    //         return $this->redirect(['view', 'id' => $model->id]);
+    //     }
+
+    //     return $this->render('update', [
+    //         'model' => $model,
+    //     ]);
+    // }
+
+
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
-
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-
             Yii::$app->session->setFlash('success', 'Catagory updated.');
-
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -132,12 +146,27 @@ class CategoriesController extends Controller
      * @return RawItemsCategories the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    // protected function findModel($id)
+    // {
+    //     if (($model = RawItemsCategories::findOne(['id' => $id])) !== null) {
+    //         return $model;
+    //     }
+
+    //     throw new NotFoundHttpException('The requested page does not exist.');
+    // }
+
+
+
+
+    protected function findModel($id) {
         if (($model = RawItemsCategories::findOne(['id' => $id])) !== null) {
             return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+
+
+}
+
 }

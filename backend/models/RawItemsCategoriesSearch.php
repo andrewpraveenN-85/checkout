@@ -18,7 +18,7 @@ class RawItemsCategoriesSearch extends RawItemsCategories
     {
         return [
             [['id', 'company_id'], 'integer'],
-            [['name', 'status', 'created_at', 'updated_at'], 'safe'],
+            [['name', 'status'], 'safe'],
         ];
     }
 
@@ -48,6 +48,12 @@ class RawItemsCategoriesSearch extends RawItemsCategories
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['status'] = [
+            'asc' => [new \yii\db\Expression("FIELD(u.status, 'active', 'inactive')")],
+            'desc' => [new \yii\db\Expression("FIELD(u.status, 'inactive', 'active')")],
+        ];
+
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -58,10 +64,7 @@ class RawItemsCategoriesSearch extends RawItemsCategories
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'company_id' => $this->company_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'company_id' => $this->company_id,  
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
