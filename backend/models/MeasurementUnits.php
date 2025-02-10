@@ -39,12 +39,13 @@ class MeasurementUnits extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'company_id'], 'required'],
-            [['status'], 'string'],
+            [['name', 'company_id','status'], 'required'],
+             
             [['company_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            // [['created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 255],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Companies::class, 'targetAttribute' => ['company_id' => 'id']],
+            
         ];
     }
 
