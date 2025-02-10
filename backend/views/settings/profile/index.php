@@ -100,8 +100,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <!-- Profile Edit Modal -->
-    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="editProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl ">
             <div class="modal-content">
                 <?php $formProfile = ActiveForm::begin(['action' => ['profile']]); ?>
                 <div class="modal-header">

@@ -6,7 +6,6 @@
 use yii\web\JsExpression;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
-use yii\captcha\Captcha;
 
 $this->title = 'Signup';
 $this->params['breadcrumbs'][] = $this->title;
@@ -31,19 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{label}<div class="input-group">{input}<button type="button" class="btn btn-outline-secondary toggle-password"><i class="fa fa-eye"></i></button><button type="button" id="generate-password" class="btn btn-outline-secondary"><i class="fa fa-random"></i></button>{error}</div>'])->passwordInput(['id' => 'signupform-password', 'placeholder' => 'Enter 8+ character password'
             ])
             ?>
-
-            <?=
-            $form->field($model, 'verifyCode')->widget(Captcha::class, [
-                'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-6">{input}</div></div>',
-            ])
-            ?>
         </div>
 
         <div class="form-group">
-<?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+            <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
         </div>
 
-<?php ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
     </div>
 </div>
 </div>

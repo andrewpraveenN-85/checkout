@@ -44,7 +44,6 @@ class EmployeesController extends Controller {
         $model = new Users();
         $model->company_id = Yii::$app->user->identity->company_id;
         $model->generateAuthKey();
-        $model->status = 'active';
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->setPassword($model->password);
             if ($model->save()) {

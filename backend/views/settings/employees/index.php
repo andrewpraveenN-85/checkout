@@ -116,37 +116,19 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
                             <?= $form->field($model, 'email')->textInput(['maxlength' => true, 'placeholder' => 'Email address', 'type' => 'email',]) ?>
                         </div>
                         <div class="mb-3">
-                            <?= $form->field($model, 'role_id')->dropDownList($roles, ['prompt' => 'Role...', 'class' => 'form-control', 'required' => true,]) ?>
-                        </div>
-                        <div class="mb-3">
                             <?=
                             $form->field($model, 'password', [
-                                'template' => '{label}<div class="input-group">{input}<button type="button" id="generate-password" class="btn btn-outline-secondary"><i class="fa fa-random"></i></button></div>{error}'
-                            ])->passwordInput(['id' => 'signupform-password', 'placeholder' => 'Enter 8+ character password'])
-                            ?>
-                        </div>
-                    <?php } else { ?>
-                        <div class="mb-3">
-                            <?=
-                            $form->field($model, 'status')->dropDownList(
-                                    ['active' => 'Active', 'inactive' => 'Inactive'],
-                                    ['prompt' => '']
-                            )
-                            ?>
-                        </div>
-                        <div class="mb-3">
-                            <?=
-                            $form->field($model, 'role_id')->dropDownList(
-                                    $roles,
-                                    [
-                                        'prompt' => 'Select Role',
-                                        'class' => 'form-control',
-                                        'required' => true,
-                                    ]
-                            )
+                                'template' => '{label}<div class="input-group">{input}<button type="button" class="btn btn-outline-secondary toggle-password"><i class="fa fa-eye"></i></button><button type="button" id="generate-password" class="btn btn-outline-secondary"><i class="fa fa-random"></i></button>{error}</div>'])->passwordInput(['id' => 'signupform-password', 'placeholder' => 'Enter 8+ character password'
+                            ])
                             ?>
                         </div>
                     <?php } ?>
+                    <div class="mb-3">
+                        <?= $form->field($model, 'role_id')->dropDownList($roles, ['prompt' => 'Role...', 'class' => 'form-control', 'required' => true,]) ?>
+                    </div>
+                    <div class="mb-3">
+                        <?= $form->field($model, 'status')->dropDownList(['active' => 'Active', 'inactive' => 'Inactive'], ['prompt' => 'Status...']) ?>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <?= Html::submitButton('Save', ['class' => 'btn btn-success w-100']) ?>

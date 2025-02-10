@@ -7,7 +7,7 @@ use yii\base\Model;
 use common\models\Users;
 use backend\models\Companies;
 use backend\models\Roles;
-
+use backend\models\RolesPermissions;
 /**
  * Signup form
  */
@@ -18,7 +18,6 @@ class SignupForm extends Model {
     public $industry;
     public $contact_number;
     public $password;
-    public $verifyCode;
 
     /**
      * {@inheritdoc}
@@ -35,7 +34,6 @@ class SignupForm extends Model {
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\Users', 'message' => 'This email address has already been taken.'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
-            ['verifyCode', 'captcha'],
         ];
     }
 
@@ -46,7 +44,6 @@ class SignupForm extends Model {
             'email' => 'Company email address',
             'password' => 'Password',
             'industry' => 'Industry',
-            'verifyCode' => 'Verification Code',
         ];
     }
 
@@ -63,13 +60,14 @@ class SignupForm extends Model {
         if (!$company->save()) {
             return false;
         }
-        mkdir(Yii::$app->params['app_host'] . $company->id, 0777, true);
+        mkdir(Yii::$app->params['storagePath'] . $company->id, 0777, true);
         $role = $this->createRole($company->id);
         if (!$role->save()) {
             return false;
         }
+        $rolePermission = $this->createRolePermission($role->id);
         $user = $this->createUser($company->id, $role->id);
-        if ($user->save()) {
+        if ($user->save() && $rolePermission->save()) {
             return $this->sendEmail($user);
         }
         return false;
@@ -98,8 +96,17 @@ class SignupForm extends Model {
     private function createRole($companyId) {
         $role = new Roles();
         $role->name = 'Company';
+        $role->status = 'active';
+        $role->permissionList = [1];
         $role->company_id = $companyId;
         return $role;
+    }
+    
+    private function createRolePermission($roleId){
+        $rolePermission = new RolesPermissions();
+        $rolePermission->role_id = $roleId;
+        $rolePermission->permission_id = 1;
+        return $rolePermission;
     }
 
     /**

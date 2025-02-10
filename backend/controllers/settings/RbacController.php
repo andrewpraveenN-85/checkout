@@ -24,7 +24,7 @@ class RbacController extends Controller {
         $searchModelPermission = new PermissionSearch(['status' => 'active']);
         $dataProviderPermission = $searchModelPermission->search($this->request->queryParams);
         $dataProviderPermission->query->andWhere(['!=', 'name', '*']);
-
+        $dataProviderPermission->query->andWhere(['!=', 'name', '/']);
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
