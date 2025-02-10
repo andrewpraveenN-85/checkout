@@ -37,16 +37,20 @@ class BrandsController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
-        $searchModel = new ProductsBrandsSearch();
+    
+
+    public function actionIndex($id = null) {
+        $model = $id ? $this->findModel($id) : new ProductsBrands();
+        $searchModel = new ProductsBrandsSearch(['company_id' => Yii::$app->user->identity->company_id]);
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                    'model' => $model,
         ]);
     }
+
 
     /**
      * Displays a single ProductsBrands model.
@@ -66,27 +70,21 @@ class BrandsController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
-    {
+    
+    public function actionCreate() {
         $model = new ProductsBrands();
-
         $model->company_id = Yii::$app->user->identity->company_id;
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-
-                Yii::$app->session->setFlash('success', 'Product Brand Created.');
-
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Product Brand Created.');
+            return $this->redirect(['index']);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
+
+
+
+
+
+
 
     /**
      * Updates an existing ProductsBrands model.
@@ -95,18 +93,14 @@ class BrandsController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+ 
 
+    public function actionUpdate($id) {
+        $model = $this->findModel($id);
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Product Brand updated.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
