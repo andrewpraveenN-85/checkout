@@ -48,7 +48,7 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
                         $searchModel,
                         'role_id',
                         $roles,
-                        ['class' => 'form-control', 'prompt' => 'Select']
+                        ['class' => 'form-select', 'prompt' => 'Select'] 
                 ),
             ],
             [
@@ -63,7 +63,7 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
                             'active' => 'Active',
                             'inactive' => 'Inactive',
                         ],
-                        ['class' => 'form-control', 'prompt' => 'Select']
+                        ['class' => 'form-select', 'prompt' => 'Select'] 
                 ),
             ],
             [

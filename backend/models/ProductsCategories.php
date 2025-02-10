@@ -33,7 +33,7 @@ class ProductsCategories extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'company_id'], 'required'],
+            [['name', 'company_id','status'], 'required'],
             [['status'], 'string'],
             [['company_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],

@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'active' => 'Active',
                             'inactive' => 'Inactive',
                         ],
-                        ['class' => 'form-control', 'prompt' => 'Select']
+                        ['class' => 'form-select', 'prompt' => 'Select'] 
                 ),
             ],
             [
