@@ -5,7 +5,7 @@ use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\widgets\DetailView;
 
-$this->title = 'Profile';
+$this->title = $model->first_name . ' ' . $model->middle_name . ' ' . $model->last_name;
 $this->params['breadcrumbs'][] = 'Settings';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -98,8 +98,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-
-    <!-- Profile Edit Modal -->
     <div class="modal fade" id="editProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl ">
             <div class="modal-content">
@@ -111,24 +109,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-4">
-                            <?= $formProfile->field($model, 'first_name')->textInput(['maxlength' => 255,'placeholder' => 'First Name']) ?>
+                            <?= $formProfile->field($model, 'first_name')->textInput(['maxlength' => 255, 'placeholder' => 'First name']) ?>
                         </div>
                         <div class="col-4">
-                            <?= $formProfile->field($model, 'middle_name')->textInput(['maxlength' => 255,'placeholder' => 'Middle Name']) ?>
+                            <?= $formProfile->field($model, 'middle_name')->textInput(['maxlength' => 255, 'placeholder' => 'Middle name']) ?>
                         </div>
                         <div class="col-4">
-                            <?= $formProfile->field($model, 'last_name')->textInput(['maxlength' => 255,'placeholder' => 'Last Name']) ?>
+                            <?= $formProfile->field($model, 'last_name')->textInput(['maxlength' => 255, 'placeholder' => 'Last name']) ?>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-4">
-                            <?= $formProfile->field($model, 'email')->input('email', ['maxlength' => 255,'placeholder' => 'Email']) ?>
+                            <?= $formProfile->field($model, 'email')->input('email', ['maxlength' => 255, 'placeholder' => 'Email address']) ?>
                         </div>
                         <div class="col-4">
-                            <?= $formProfile->field($model, 'contact_number')->textInput(['maxlength' => 15,'placeholder' => 'Conact Number', 'pattern' => '^\+?[0-9]*$',]) ?>
+                            <?= $formProfile->field($model, 'contact_number')->textInput(['maxlength' => 15, 'placeholder' => 'Conact number', 'pattern' => '^\+?[0-9]*$',]) ?>
                         </div>
                         <div class="col-4">
-                            <?= $formProfile->field($model, 'address')->textInput(['maxlength' => 255,'placeholder' => 'Address']) ?>
+                            <?= $formProfile->field($model, 'address')->textInput(['maxlength' => 255, 'placeholder' => 'Address']) ?>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -166,7 +164,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <!-- Change Password Modal -->
     <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -204,10 +201,15 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
+</div>
 
-    <?php
-    $this->registerJs("
+<?php
+$this->registerJs("
     $(document).ready(function() {
+        var myModalEl = document.getElementById('editProfileModal');
+        myModalEl.addEventListener('hidden.bs.modal', function (event) {
+            window.location.href = '/settings/profile'; // Replace '/index' with the actual route to your index page.
+        });
         document.getElementById('profile-upload').addEventListener('change', function () {
             let file = this.files[0];
             if (file) {
@@ -218,7 +220,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 reader.readAsDataURL(file);
             }
         });
-        
         document.getElementById('generate-password').addEventListener('click', function() {
             let charset = \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+\";
             let password = \"\";
@@ -227,7 +228,6 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             document.getElementById('signupform-password').value = password;
         });
-        
         document.querySelectorAll(\".toggle-password\").forEach(button => {
             button.addEventListener(\"click\", function () {
                 let input = this.closest(\".input-group\").querySelector(\"input\");
@@ -245,5 +245,5 @@ $this->params['breadcrumbs'][] = $this->title;
             });
        });
     });
-", \yii\web\View::POS_END); // Add at the end of the page
-    ?>
+", \yii\web\View::POS_END);
+?>

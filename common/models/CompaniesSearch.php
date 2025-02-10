@@ -17,7 +17,7 @@ class CompaniesSearch extends Companies {
     public function rules() {
         return [
             [['id', 'number_of_employees'], 'integer'],
-            [['name', 'registration_number', 'industry', 'address', 'city', 'state', 'country', 'postal_code', 'phone', 'email', 'website', 'logo', 'established_date', 'status', 'created_at', 'updated_at'], 'safe'],
+            [['name', 'registration_number', 'industry', 'address', 'contact_number', 'email', 'website', 'logo', 'established_date', 'status', 'created_at', 'updated_at'], 'safe'],
             [['annual_revenue'], 'number'],
         ];
     }
@@ -68,11 +68,7 @@ class CompaniesSearch extends Companies {
                 ->andFilterWhere(['like', 'registration_number', $this->registration_number])
                 ->andFilterWhere(['like', 'industry', $this->industry])
                 ->andFilterWhere(['like', 'address', $this->address])
-                ->andFilterWhere(['like', 'city', $this->city])
-                ->andFilterWhere(['like', 'state', $this->state])
-                ->andFilterWhere(['like', 'country', $this->country])
-                ->andFilterWhere(['like', 'postal_code', $this->postal_code])
-                ->andFilterWhere(['like', 'phone', $this->phone])
+                ->andFilterWhere(['like', 'contact_number', $this->contact_number])
                 ->andFilterWhere(['like', 'email', $this->email])
                 ->andFilterWhere(['like', 'website', $this->website])
                 ->andFilterWhere(['like', 'logo', $this->logo])

@@ -372,7 +372,7 @@ AppAsset::register($this);
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-bs-toggle="collapse" href="#configuration" role="button" aria-expanded="false" aria-controls="submenu5">
-                                            <i class="fa fa-cogs fa-fw fa-sm"></i><span class="nav-link-text">Configuration</span><i class="fa fa-caret-down dropdown-arrow"></i>
+                                            <i class="fa fa-cogs fa-fw fa-sm"></i><span class="nav-link-text">Configurations</span><i class="fa fa-caret-down dropdown-arrow"></i>
                                         </a>
                                         <div class="collapse" id="configuration">
                                             <ul class="nav flex-column ms-3">
