@@ -17,28 +17,25 @@ use Yii;
  * @property Companies $company
  * @property RawItems[] $rawItems
  */
-class RawItemsBrands extends \yii\db\ActiveRecord
-{
+class RawItemsBrands extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'raw_items_brands';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['name', 'company_id'], 'required'],
+            [['name', 'company_id', 'status'], 'required'],
             [['status'], 'string'],
             [['company_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 255],
+            [['name', 'company_id'], 'unique', 'targetAttribute' => ['name', 'company_id']],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Companies::class, 'targetAttribute' => ['company_id' => 'id']],
         ];
     }
@@ -46,8 +43,7 @@ class RawItemsBrands extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'name' => 'Name',
             'status' => 'Status',
@@ -59,8 +55,7 @@ class RawItemsBrands extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCompany()
-    {
+    public function getCompany() {
         return $this->hasOne(Companies::class, ['id' => 'company_id']);
     }
 
@@ -69,8 +64,7 @@ class RawItemsBrands extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getRawItems()
-    {
+    public function getRawItems() {
         return $this->hasMany(RawItems::class, ['raw_items_brand_id' => 'id']);
     }
 }

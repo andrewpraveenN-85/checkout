@@ -41,14 +41,14 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
             [
                 'attribute' => 'role_name',
                 'label' => 'Role',
-                'value' => function($model) {
-                    return $model->role ? $model->role->name : ''; 
+                'value' => function ($model) {
+                    return $model->role ? $model->role->name : '';
                 },
                 'filter' => Html::activeDropDownList(
-                    $searchModel,
-                    'role_id',
-                    $roles,
-                    ['class' => 'form-control', 'prompt' => 'Select']
+                        $searchModel,
+                        'role_id',
+                        $roles,
+                        ['class' => 'form-control', 'prompt' => 'Select']
                 ),
             ],
             [
@@ -57,13 +57,13 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
                     return ucfirst($data->status);
                 },
                 'filter' => Html::activeDropDownList(
-                    $searchModel,
-                    'status',
-                    [
-                        'active' => 'Active',
-                        'inactive' => 'Inactive',
-                    ],
-                    ['class' => 'form-control', 'prompt' => 'Select']
+                        $searchModel,
+                        'status',
+                        [
+                            'active' => 'Active',
+                            'inactive' => 'Inactive',
+                        ],
+                        ['class' => 'form-control', 'prompt' => 'Select']
                 ),
             ],
             [
@@ -73,15 +73,15 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
                     'custom' => function ($url, $data, $key) {
                         if ($data->id !== Yii::$app->user->id) {
                             return Html::a(
-                                'Update',
-                                ['index', 'id' => $data->id],
-                                [
-                                    'class' => 'btn btn-primary',
-                                    'data' => [
-                                        'pjax' => 0, // Ensure a full page load instead of PJAX.
-                                    ],
-                                ]
-                            );
+                                            'Update',
+                                            ['index', 'id' => $data->id],
+                                            [
+                                                'class' => 'btn btn-primary',
+                                                'data' => [
+                                                    'pjax' => 0, // Ensure a full page load instead of PJAX.
+                                                ],
+                                            ]
+                                    );
                         }
                     },
                 ],
@@ -107,55 +107,16 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
                 <div class="modal-body">
                     <?php if ($model->isNewRecord) { ?>
                         <div class="mb-3">
-                            <?=
-                            $form->field($model, 'first_name')->textInput([
-                                'maxlength' => true,
-                                'placeholder' => 'Enter your name',
-                            ])
-                            ?>
+                            <?= $form->field($model, 'first_name')->textInput(['maxlength' => 255, 'placeholder' => 'First name',]) ?>
                         </div>
                         <div class="mb-3">
-                            <?=
-                            $form->field($model, 'contact_number')->textInput([
-                                'maxlength' => 15, // For a standard phone number format
-                                'placeholder' => 'Enter your phone number',
-                                'pattern' => '^\+?[0-9]*$', // This allows optional '+' at the start and only numbers
-                            ])
-                            ?>
+                            <?= $form->field($model, 'contact_number')->textInput(['maxlength' => 15, 'placeholder' => 'Contact number', 'pattern' => '^\+?[0-9]*$',]) ?>
                         </div>
                         <div class="mb-3">
-                            <?=
-                            $form->field($model, 'address')->textInput([
-                                'maxlength' => true,
-                                'placeholder' => 'Enter your address',
-                            ])
-                            ?>
+                            <?= $form->field($model, 'email')->textInput(['maxlength' => true, 'placeholder' => 'Email address', 'type' => 'email',]) ?>
                         </div>
                         <div class="mb-3">
-                            <?=
-                            $form->field($model, 'country')->dropDownList($countries, [
-                                'prompt' => 'Select...',
-                            ])
-                            ?>
-                        </div>
-                        <div class="mb-3">
-                            <?=
-                            $form->field($model, 'email')->textInput([
-                                'maxlength' => true,
-                                'placeholder' => 'Enter your email address',
-                                'type' => 'email', // Ensures browser validation for email
-                            ])
-                            ?>
-                        </div>
-                        <div class="mb-3">
-                            <?= $form->field($model, 'role_id')->dropDownList(
-                                $roles,
-                                [
-                                    'prompt' => 'Select Role',
-                                    'class' => 'form-control',
-                                    'required' => true,
-                                ]
-                            )->hint('Select a role for the employee') ?>
+                            <?= $form->field($model, 'role_id')->dropDownList($roles, ['prompt' => 'Role...', 'class' => 'form-control', 'required' => true,]) ?>
                         </div>
                         <div class="mb-3">
                             <?=
@@ -166,20 +127,24 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
                         </div>
                     <?php } else { ?>
                         <div class="mb-3">
-                            <?= $form->field($model, 'status')->dropDownList(
-                                ['active' => 'Active', 'inactive' => 'Inactive'],
-                                ['prompt' => '']
-                            ) ?>
+                            <?=
+                            $form->field($model, 'status')->dropDownList(
+                                    ['active' => 'Active', 'inactive' => 'Inactive'],
+                                    ['prompt' => '']
+                            )
+                            ?>
                         </div>
                         <div class="mb-3">
-                            <?= $form->field($model, 'role_id')->dropDownList(
-                                $roles,
-                                [
-                                    'prompt' => 'Select Role',
-                                    'class' => 'form-control',
-                                    'required' => true,
-                                ]
-                            ) ?>
+                            <?=
+                            $form->field($model, 'role_id')->dropDownList(
+                                    $roles,
+                                    [
+                                        'prompt' => 'Select Role',
+                                        'class' => 'form-control',
+                                        'required' => true,
+                                    ]
+                            )
+                            ?>
                         </div>
                     <?php } ?>
                 </div>
@@ -213,6 +178,23 @@ $this->registerJs("
             }
             document.getElementById('signupform-password').value = password;
         });
+        
+        document.querySelectorAll(\".toggle-password\").forEach(button => {
+            button.addEventListener(\"click\", function () {
+                let input = this.closest(\".input-group\").querySelector(\"input\");
+                let icon = this.querySelector(\"i\");
+
+                if (input.type === \"password\") {
+                    input.type = \"text\";
+                    icon.classList.remove(\"fa-eye\");
+                    icon.classList.add(\"fa-eye-slash\");
+                } else {
+                    input.type = \"password\";
+                    icon.classList.remove(\"fa-eye-slash\");
+                    icon.classList.add(\"fa-eye\");
+                }
+            });
+       });
     });
 ", \yii\web\View::POS_END); // Add at the end of the page
 ?>

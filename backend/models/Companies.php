@@ -12,10 +12,7 @@ use Yii;
  * @property string|null $registration_number
  * @property string|null $industry
  * @property string|null $address
- * @property string|null $city
- * @property string|null $state
- * @property string|null $country
- * @property string|null $postal_code
+ * @property string|null $city_id
  * @property string|null $contact_number
  * @property string|null $email
  * @property string|null $website
@@ -43,8 +40,13 @@ use Yii;
  * @property Suppliers[] $suppliers
  * @property Transactions[] $transactions
  * @property Users[] $users
+ * @property States $city
  */
 class Companies extends \yii\db\ActiveRecord {
+
+    public $picture;
+    public $state;
+    public $country;
 
     /**
      * {@inheritdoc}
@@ -60,10 +62,10 @@ class Companies extends \yii\db\ActiveRecord {
         return [
             [['name'], 'required'],
             [['address', 'status'], 'string'],
-            [['name', 'registration_number', 'industry', 'city', 'state', 'country', 'postal_code', 'contact_number', 'email', 'website', 'logo','established_date', 'number_of_employees', 'annual_revenue'], 'safe'],
+            [['name', 'registration_number', 'industry', 'city_id', 'state', 'country', 'contact_number', 'email', 'website', 'logo', 'established_date', 'number_of_employees', 'annual_revenue'], 'safe'],
             [['number_of_employees'], 'integer'],
             [['annual_revenue'], 'number'],
-            [['name', 'registration_number', 'industry', 'city', 'state', 'country', 'postal_code', 'contact_number', 'email', 'website', 'logo'], 'string', 'max' => 255],
+            [['name', 'registration_number', 'industry', 'city_id', 'state', 'country', 'contact_number', 'email', 'website', 'logo'], 'string', 'max' => 255],
         ];
     }
 
@@ -76,10 +78,9 @@ class Companies extends \yii\db\ActiveRecord {
             'registration_number' => 'Registration Number',
             'industry' => 'Industry',
             'address' => 'Address',
-            'city' => 'City',
+            'city_id' => 'City',
             'state' => 'State',
             'country' => 'Country',
-            'postal_code' => 'Postal Code',
             'contact_number' => 'Phone',
             'email' => 'Email',
             'website' => 'Website',
@@ -235,5 +236,9 @@ class Companies extends \yii\db\ActiveRecord {
      */
     public function getUsers() {
         return $this->hasMany(Users::class, ['company_id' => 'id']);
+    }
+
+    public function getCity() {
+        return $this->hasOne(Cities::class, ['id' => 'city_id']);
     }
 }

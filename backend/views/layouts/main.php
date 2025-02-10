@@ -18,7 +18,7 @@ AppAsset::register($this);
         <?php $this->registerCsrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="<?= Yii::$app->params['app_host'] . 'css/bootstrap.min.css'; ?>" rel="stylesheet">
         <style>
             /* Ensure the sidebar takes full height */
             #sidebar {
@@ -441,7 +441,7 @@ AppAsset::register($this);
                 <p class="float-end"><?= Yii::powered() ?></p>
             </div>
         </footer>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="<?= Yii::$app->params['app_host'] . 'js/bootstrap.bundle.min.js'; ?>"></script>
         <script>
             const sidebar = document.getElementById('sidebar');
             const wrapper = document.getElementById('wrapper');

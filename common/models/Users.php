@@ -7,8 +7,8 @@ use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 use backend\models\Companies;
 use backend\models\Roles;
-use backend\models\UsersRoles;
 use backend\models\Sales;
+use backend\models\Cities;
 
 /**
  * This is the model class for table "users".
@@ -17,15 +17,10 @@ use backend\models\Sales;
  * @property string|null $first_name
  * @property string|null $middle_name
  * @property string|null $last_name
- * @property string|null $date_of_birth
  * @property string|null $contact_number
  * @property string|null $address
- * @property string|null $city
- * @property string|null $state
- * @property string|null $country
- * @property string|null $postal_code
+ * @property string|null $city_id
  * @property string|null $profile_picture
- * @property string $user_type
  * @property int|null $company_id
  * @property string $email
  * @property string $password_hash
@@ -40,58 +35,55 @@ use backend\models\Sales;
  * @property Companies $company
  * @property Roles[] $roles
  * @property Sales[] $sales
- * @property Sales[] $sales0
+ * @property States $city
  */
-class Users extends \yii\db\ActiveRecord implements IdentityInterface
-{
+class Users extends \yii\db\ActiveRecord implements IdentityInterface {
 
     public $picture;
     public $password;
     public $newpassword;
+    public $state;
+    public $country;
 
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'users';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['password', 'newpassword', 'date_of_birth', 'password_hash', 'email', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city', 'state', 'country', 'postal_code', 'profile_picture', 'picture', 'company_id', 'role_name', 'role_id'], 'safe'],
-            [['user_type', 'status'], 'string'],
-            [['company_id', 'role_id'], 'integer'],
-            [['address', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city', 'state', 'country', 'postal_code', 'profile_picture', 'email', 'password_hash', 'password_reset_token', 'verification_token'], 'string', 'max' => 255],
+            [['password', 'newpassword', 'password_hash', 'email', 'first_name', 'middle_name', 'last_name', 'contact_number', 'city_id', 'state', 'country', 'profile_picture', 'picture', 'company_id', 'role_name', 'role_id'], 'safe'],
+            [['email', 'first_name', 'contact_number'], 'required'],
+            [['company_id', 'role_id', 'city_id',], 'integer'],
+            [['address', 'first_name', 'middle_name', 'last_name', 'contact_number', 'profile_picture', 'email', 'password_hash', 'password_reset_token', 'verification_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['email'], 'unique'],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Companies::class, 'targetAttribute' => ['company_id' => 'id']],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Roles::class, 'targetAttribute' => ['role_id' => 'id']],
+            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::class, 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'first_name' => 'First Name',
             'middle_name' => 'Middle Name',
             'last_name' => 'Last Name',
-            'date_of_birth' => 'Date Of Birth',
             'contact_number' => 'Contact',
             'address' => 'Address',
-            'city' => 'City',
+            'city_id' => 'City',
             'state' => 'State',
             'country' => 'Country',
-            'postal_code' => 'Postal Code',
             'profile_picture' => 'Picture',
-            'user_type' => 'User Type',
+            'picture' => 'Picture',
             'company_id' => 'Company',
             'email' => 'Email',
             'password_hash' => 'Password',
@@ -100,22 +92,21 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
             'updated_at' => 'Updated',
             'role_name' => 'Role',
             'role_id' => 'Role',
+            'newpassword' => 'New Password'
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentity($id)
-    {
+    public static function findIdentity($id) {
         return static::findOne(['id' => $id, 'status' => 'active']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
+    public static function findIdentityByAccessToken($token, $type = null) {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
@@ -125,8 +116,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      * @param string $email
      * @return static|null
      */
-    public static function findByEmail($email)
-    {
+    public static function findByEmail($email) {
         return static::findOne(['email' => $email, 'status' => 'active']);
     }
 
@@ -136,15 +126,14 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      * @param string $token password reset token
      * @return static|null
      */
-    public static function findByPasswordResetToken($token)
-    {
+    public static function findByPasswordResetToken($token) {
         if (!static::isPasswordResetTokenValid($token)) {
             return null;
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
-            'status' => 'active',
+                    'password_reset_token' => $token,
+                    'status' => 'active',
         ]);
     }
 
@@ -154,11 +143,10 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token)
-    {
+    public static function findByVerificationToken($token) {
         return static::findOne([
-            'verification_token' => $token,
-            'status' => 'inactive'
+                    'verification_token' => $token,
+                    'status' => 'inactive'
         ]);
     }
 
@@ -168,8 +156,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      * @param string $token password reset token
      * @return bool
      */
-    public static function isPasswordResetTokenValid($token)
-    {
+    public static function isPasswordResetTokenValid($token) {
         if (empty($token)) {
             return false;
         }
@@ -182,24 +169,21 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->getPrimaryKey();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAuthKey()
-    {
+    public function getAuthKey() {
         return $this->auth_key;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAuthKey($authKey)
-    {
+    public function validateAuthKey($authKey) {
         return $this->getAuthKey() === $authKey;
     }
 
@@ -209,8 +193,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
-    {
+    public function validatePassword($password) {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
@@ -219,40 +202,35 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      *
      * @param string $password
      */
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 
     /**
      * Generates "remember me" authentication key
      */
-    public function generateAuthKey()
-    {
+    public function generateAuthKey() {
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
     /**
      * Generates new password reset token
      */
-    public function generatePasswordResetToken()
-    {
+    public function generatePasswordResetToken() {
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
      * Generates new token for email verification
      */
-    public function generateEmailVerificationToken()
-    {
+    public function generateEmailVerificationToken() {
         $this->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
      * Removes password reset token
      */
-    public function removePasswordResetToken()
-    {
+    public function removePasswordResetToken() {
         $this->password_reset_token = null;
     }
 
@@ -261,29 +239,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCompany()
-    {
+    public function getCompany() {
         return $this->hasOne(Companies::class, ['id' => 'company_id']);
-    }
-
-    /**
-     * Gets query for [[Roles]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRoles()
-    {
-        return $this->hasMany(Roles::class, ['id' => 'role_id'])->viaTable('users_roles', ['user_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Sales]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSales()
-    {
-        return $this->hasMany(Sales::class, ['customer_id' => 'id']);
     }
 
     /**
@@ -291,8 +248,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getSales0()
-    {
+    public function getSales() {
         return $this->hasMany(Sales::class, ['employee_id' => 'id']);
     }
 
@@ -305,25 +261,11 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     // {
     //     return $this->hasMany(UsersRoles::class, ['user_id' => 'id']);
     // }
-    public function getRole()
-    {
+    public function getRole() {
         return $this->hasOne(Roles::class, ['id' => 'role_id']);
     }
 
-    // public function hasAccess($permission_name)
-    // {
-    //     $roles = $this->roles; // Get user roles through the relation
-    //     foreach ($roles as $role) {
-    //         foreach ($role->permissions as $permission) {
-    //             if ($permission->name === $permission_name && $permission->status === 'active') {
-    //                 return true; // Permission granted
-    //             }
-    //         }
-    //     }
-    //     return false; // No permission found
-    // }
-    public function hasAccess($permission_name)
-    {
+    public function hasAccess($permission_name) {
         $role = $this->role_id ? Roles::findOne($this->role_id) : null;
         if ($role) {
             foreach ($role->permissions as $permission) {
@@ -335,14 +277,15 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         return false;
     }
 
-    // public function getRoleNames()
-    // {
-    //     return implode(', ', \yii\helpers\ArrayHelper::getColumn($this->roles, 'name'));
-    // }
+    public function getCity() {
+        return $this->hasOne(Cities::class, ['id' => 'city_id']);
+    }
 
-    // public function afterFind()
-    // {
-    //     parent::afterFind();
-    //     $this->role_name = $this->getRoleNames(); // Assign role name to the public property
-    // }
+    public function getPictureURL() {
+        if ($this->profile_picture != null) {
+            return Yii::$app->params['app_host'] . 'storage/' . $this->company_id . '/profile_picture/' . $this->profile_picture;
+        } else {
+            return Yii::$app->params['app_host'] . 'storage/default.jpg';
+        }
+    }
 }

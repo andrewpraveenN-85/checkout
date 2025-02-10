@@ -77,11 +77,8 @@ class SiteController extends Controller {
     }
 
     public function actionDashboard() {
-        $model = $this->findModel(Yii::$app->user->identity->company_id);
-        
+
         return $this->render('dashboard', [
-            'model' => $model,
-            'countries' => $this->getCountries()
         ]);
     }
 
@@ -156,14 +153,13 @@ class SiteController extends Controller {
      */
     public function actionSignup() {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())  && $model->validate() && $model->signup()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->signup()) {
             Yii::$app->session->setFlash('success', 'Thank you for registration.');
             return $this->goHome();
-        } 
+        }
 
         return $this->render('signup', [
                     'model' => $model,
-                    'countries' => $this->getCountries()
         ]);
     }
 
@@ -254,67 +250,10 @@ class SiteController extends Controller {
         ]);
     }
 
-    private function getCountries() {
-        $countries = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries/positions');
-
-        $countryList = [];
-        if (!empty($countries)) {
-            foreach ($countries as $country) {
-                $countryList[$country['iso2']] = $country['name'];
-            }
-        }
-        asort($countryList);
-        return $countryList;
-    }
-
-    private function getCountriesNowAPI($url) {
-        $contents = file_get_contents($url);
-        return json_decode($contents, true)['data'];
-    }
-
-    private function getDropDownOptions($array) {
-        $options = "<option value=''>Select...</option>";
-        foreach ($array as $value) {
-            $options .= "<option value='" . htmlspecialchars($value) . "'>" . htmlspecialchars($value) . "</option>";
-        }
-        return $options;
-    }
-
-    private function fetchStates($country) {
-        $data = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries/states');
-        foreach ($data as $item) {
-            if ($item['iso2'] === $country) {
-                return array_column($item['states'], 'name');
-            }
-        }
-        return [];
-    }
-
-    private function fetchCities($country) {
-        $data = $this->getCountriesNowAPI('https://countriesnow.space/api/v0.1/countries');
-        foreach ($data as $item) {
-            if ($item['iso2'] === $country) {
-                return $item['cities'];
-            }
-        }
-        return [];
-    }
-
-    public function actionGetStatesCities($country) {
-        $states = $this->fetchStates($country);
-        $cities = $this->fetchCities($country);
-        asort($states);
-        asort($cities);
-        return json_encode([
-            'states' => $this->getDropDownOptions($states),
-            'cities' => $this->getDropDownOptions($cities)
-        ]);
-    }
-
     protected function findModel($id) {
         if (($model = Companies::findOne(['id' => $id])) !== null) {
             return $model;
-        }else{
+        } else {
             return new Companies();
         }
     }

@@ -18,7 +18,7 @@ class UsersSearch extends Users {
     public function rules() {
         return [
             [['id', 'company_id', 'role_name'], 'integer'],
-            [['first_name', 'contact_number', 'user_type', 'email', 'status', 'role_name'], 'safe'],
+            [['first_name', 'contact_number', 'email', 'status', 'role_name'], 'safe'],
         ];
     }
 
@@ -38,7 +38,7 @@ class UsersSearch extends Users {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        $query = Users::find()->alias('u')->joinWith('roles'); // Define alias 'u' for users table
+        $query = Users::find()->alias('u')->joinWith('role'); // Define alias 'u' for users table
         // Add conditions that should always apply
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
