@@ -5,6 +5,7 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\widgets\ActiveForm;
+
 /** @var yii\web\View $this */
 /** @var backend\models\TaxesSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -32,8 +33,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'name',
             'rate',
-            'effective_date',
-            'expiration_date',
+            [
+                'attribute' => 'effective_date',
+                'format' => 'date',
+                'filter' => Html::input('date', 'effective_date', $searchModel->effective_date, [
+                    'class' => 'form-control',
+                ]),
+            ],
+            [
+                'attribute' => 'expiration_date',
+                'format' => 'date',
+                'filter' => Html::input('date', 'expiration_date', $searchModel->expiration_date, [
+                    'class' => 'form-control',
+                ]),
+            ],
             [
                 'attribute' => 'status',
                 'value' => function ($data) {
@@ -88,16 +101,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <?= $form->field($model, 'name')->textInput(['maxlength' => 200, 'placeholder'=>'Tax name' ]) ?>
+                        <?= $form->field($model, 'name')->textInput(['maxlength' => 200, 'placeholder' => 'Tax name']) ?>
                     </div>
                     <div class="mb-3">
-                        <?= $form->field($model, 'rate')->textInput(['type' => 'number','min'=>0.00, 'step'=>0.01, 'max'=>100.00, 'placeholder'=>'Tax rate']) ?>
+                        <?= $form->field($model, 'rate')->textInput(['type' => 'number', 'min' => 0.00, 'step' => 0.01, 'max' => 100.00, 'placeholder' => 'Tax rate']) ?>
                     </div>
                     <div class="mb-3">
-                        <?= $form->field($model, 'effective_date')->textInput(['type' => 'date', 'placeholder'=>'Effective date']) ?>
+                        <?= $form->field($model, 'effective_date')->textInput(['type' => 'date', 'placeholder' => 'Effective date']) ?>
                     </div>
                     <div class="mb-3">
-                        <?= $form->field($model, 'expiration_date')->textInput(['type' => 'date', 'placeholder'=>'Expiration date']) ?>
+                        <?= $form->field($model, 'expiration_date')->textInput(['type' => 'date', 'placeholder' => 'Expiration date']) ?>
                     </div>
                     <div class="mb-3">
                         <?= $form->field($model, 'status')->dropDownList(['default' => 'Default', 'active' => 'Active', 'inactive' => 'Inactive'], ['prompt' => 'Status...']) ?>
@@ -110,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
-    
+
 </div>
 
 <?php
