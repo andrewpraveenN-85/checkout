@@ -37,14 +37,28 @@ class MeasurementUnitsController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
-        $searchModel = new MeasurementUnitsSearch();
+    // public function actionIndex()
+    // {
+    //     $searchModel = new MeasurementUnitsSearch();
+    //     $dataProvider = $searchModel->search($this->request->queryParams);
+
+    //     return $this->render('index', [
+    //         'searchModel' => $searchModel,
+    //         'dataProvider' => $dataProvider,
+    //     ]);
+    // }
+
+
+
+    public function actionIndex($id = null) {
+        $model = $id ? $this->findModel($id) : new MeasurementUnits();
+        $searchModel = new MeasurementUnitsSearch(['company_id' => Yii::$app->user->identity->company_id]);
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                    'model' => $model,
         ]);
     }
 
@@ -66,25 +80,51 @@ class MeasurementUnitsController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
-    {
+    // public function actionCreate()
+    // {
+    //     $model = new MeasurementUnits();
+    //     $model->company_id = Yii::$app->user->identity->company_id;
+    //     if ($this->request->isPost) {
+    //         if ($model->load($this->request->post()) && $model->save()) {
+
+    //             Yii::$app->session->setFlash('success', 'Measurement Unit Created.');
+    //             return $this->redirect(['view', 'id' => $model->id]);
+
+    //         }
+    //     } else {
+    //         $model->loadDefaultValues();
+    //     }
+
+    //     return $this->render('create', [
+    //         'model' => $model,
+    //     ]);
+    // }
+
+
+
+ 
+ 
+
+    public function actionCreate() {
         $model = new MeasurementUnits();
         $model->company_id = Yii::$app->user->identity->company_id;
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-
-                Yii::$app->session->setFlash('success', 'Measurement Unit Created.');
-                return $this->redirect(['view', 'id' => $model->id]);
-
-            }
-        } else {
-            $model->loadDefaultValues();
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Measurement Unit Created.');
+            return $this->redirect(['index']);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Updates an existing MeasurementUnits model.
@@ -93,18 +133,28 @@ class MeasurementUnitsController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    // public function actionUpdate($id)
+    // {
+    //     $model = $this->findModel($id);
+
+    //     if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+    //         Yii::$app->session->setFlash('success', 'Measurement Unit Updated.');
+    //         return $this->redirect(['view', 'id' => $model->id]);
+    //     }
+
+    //     return $this->render('update', [
+    //         'model' => $model,
+    //     ]);
+    // }
+
+
+
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
-
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Measurement Unit Updated.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'Measurement Unit updated.');
+            return $this->redirect(['index']);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
