@@ -7,6 +7,7 @@ use backend\models\SuppliersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * SuppliersController implements the CRUD actions for Suppliers model.
@@ -36,14 +37,17 @@ class SuppliersController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($id = null)
     {
+        $model = $id ? $this->findModel($id) : new Suppliers();
+
         $searchModel = new SuppliersSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
 
@@ -71,7 +75,14 @@ class SuppliersController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                // return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'Supplier Created.');
+                    return $this->redirect(['index']);
+                } else {
+                    // Handle error if configuration save fails
+                    Yii::$app->session->setFlash('error', 'Failed to save configuration.');
+                }
             }
         } else {
             $model->loadDefaultValues();
@@ -94,7 +105,14 @@ class SuppliersController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            // return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Supplier Updated.');
+                return $this->redirect(['index']);
+            } else {
+                // Handle error if configuration save fails
+                Yii::$app->session->setFlash('error', 'Failed to save configuration.');
+            }
         }
 
         return $this->render('update', [
@@ -109,12 +127,12 @@ class SuppliersController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+    // public function actionDelete($id)
+    // {
+    //     $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
-    }
+    //     return $this->redirect(['index']);
+    // }
 
     /**
      * Finds the Suppliers model based on its primary key value.
@@ -127,8 +145,8 @@ class SuppliersController extends Controller
     {
         if (($model = Suppliers::findOne(['id' => $id])) !== null) {
             return $model;
+        } else {
+            return new Suppliers();
         }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

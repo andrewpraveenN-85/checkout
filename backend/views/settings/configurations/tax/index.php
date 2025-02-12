@@ -5,6 +5,7 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\widgets\ActiveForm;
+use backend\models\Taxes;
 
 /** @var yii\web\View $this */
 /** @var backend\models\TaxesSearch $searchModel */

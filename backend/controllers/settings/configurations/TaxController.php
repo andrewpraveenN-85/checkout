@@ -8,7 +8,6 @@ use backend\models\TaxesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use Yii;
 
 class TaxController extends Controller {
 
@@ -79,13 +78,13 @@ class TaxController extends Controller {
         }
     }
 
-    public function actionUpdate($id) {
-        $model = $this->findModel($id);
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Tax updated successfully.');
-            return $this->redirect(['index']);
-        }
-    }
+    // public function actionUpdate($id) {
+    //     $model = $this->findModel($id);
+    //     if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+    //         Yii::$app->session->setFlash('success', 'Tax updated successfully.');
+    //         return $this->redirect(['index']);
+    //     }
+    // }
 
     protected function findModel($id) {
         if (($model = Taxes::findOne(['id' => $id])) !== null) {
