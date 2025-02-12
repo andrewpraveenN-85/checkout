@@ -9,6 +9,11 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var backend\models\TaxesSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+
+// Check if an 'id' parameter exists for update
+$isUpdate = Yii::$app->request->get('id') ? true : false;
+$model = $isUpdate ? Taxes::findOne(Yii::$app->request->get('id')) : new Taxes();
+
 $this->title = 'Taxes';
 $this->params['breadcrumbs'][] = 'Settings';
 $this->params['breadcrumbs'][] = 'Configurations';
@@ -19,102 +24,67 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal">
-            Create
+        <!-- Button to trigger the modal -->
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#taxes-modal">
+            <?= $isUpdate ? 'Update Taxes' : 'Create Taxes' ?>
         </button>
     </p>
 
     <?php Pjax::begin(); ?>
-
-    <?=
-    GridView::widget([
+    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'name',
-            'rate',
-            [
-                'attribute' => 'effective_date',
-                'format' => 'date',
-                'filter' => Html::input('date', 'effective_date', $searchModel->effective_date, [
-                    'class' => 'form-control',
-                ]),
-            ],
-            [
-                'attribute' => 'expiration_date',
-                'format' => 'date',
-                'filter' => Html::input('date', 'expiration_date', $searchModel->expiration_date, [
-                    'class' => 'form-control',
-                ]),
-            ],
-            [
-                'attribute' => 'status',
-                'value' => function ($data) {
-                    return ucfirst($data->status);
-                },
-                'filter' => Html::activeDropDownList(
-                        $searchModel,
-                        'status',
-                        [
-                            'default' => 'Default',
-                            'active' => 'Active',
-                            'inactive' => 'Inactive',
-                        ],
-                        ['class' => 'form-select', 'prompt' => 'Select'] 
-                ),
-            ],
+            'tax_name',
+            'tax_rate',
+            'effective_date',
+            'expiration_date',
+            'status',
             [
                 'class' => ActionColumn::className(),
                 'template' => '{custom}',
                 'buttons' => [
                     'custom' => function ($url, $data, $key) {
+                        // This update button reloads the page with an id parameter
                         return Html::a(
-                                'Update',
-                                ['index', 'id' => $data->id],
-                                [
-                                    'class' => 'btn btn-primary',
-                                    'data' => [
-                                        'pjax' => 0, // Ensure a full page load instead of PJAX.
-                                    ],
-                                ]
+                            'Update',
+                            ['index', 'id' => $data->id],
+                            [
+                                'class' => 'btn btn-primary',
+                                'data' => ['pjax' => 0],
+                            ]
                         );
                     },
                 ],
             ],
         ],
-    ]);
-    ?>
-
+    ]); ?>
     <?php Pjax::end(); ?>
 
-    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- Modal for Create/Update Taxes -->
+    <div class="modal fade" id="taxes-modal" tabindex="-1" aria-labelledby="taxesModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <?php if ($model->isNewRecord) { ?>
-                    <?php $form = ActiveForm::begin(['action' => ['create'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
-                <?php } else { ?>
-                    <?php $form = ActiveForm::begin(['action' => ['update', 'id' => $model->id], 'options' => ['enctype' => 'multipart/form-data']]); ?>
-                <?php } ?>
+                <?php
+                // The form's action will be "create" or "update" based on the $isUpdate flag.
+                $form = ActiveForm::begin([
+                    'id' => 'taxes-form',
+                    'action' => $isUpdate ? ['update', 'id' => $model->id] : ['create'],
+                    'options' => ['enctype' => 'multipart/form-data']
+                ]);
+                ?>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><?= $model->isNewRecord ? 'Create Tax' : 'Update Tax - ' . Html::encode($model->name) ?></h5>
-                    <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="taxesModalLabel">
+                        <?= $isUpdate ? 'Update Taxes' : 'Create Taxes' ?>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <?= $form->field($model, 'name')->textInput(['maxlength' => 200, 'placeholder' => 'Tax name']) ?>
-                    </div>
-                    <div class="mb-3">
-                        <?= $form->field($model, 'rate')->textInput(['type' => 'number', 'min' => 0.00, 'step' => 0.01, 'max' => 100.00, 'placeholder' => 'Tax rate']) ?>
-                    </div>
-                    <div class="mb-3">
-                        <?= $form->field($model, 'effective_date')->textInput(['type' => 'date', 'placeholder' => 'Effective date']) ?>
-                    </div>
-                    <div class="mb-3">
-                        <?= $form->field($model, 'expiration_date')->textInput(['type' => 'date', 'placeholder' => 'Expiration date']) ?>
-                    </div>
-                    <div class="mb-3">
-                        <?= $form->field($model, 'status')->dropDownList(['default' => 'Default', 'active' => 'Active', 'inactive' => 'Inactive'], ['prompt' => 'Status...']) ?>
-                    </div>
+                    <?= $form->field($model, 'tax_name')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'tax_rate')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'effective_date')->input('date') ?>
+                    <?= $form->field($model, 'expiration_date')->input('date') ?>
+                    <?= $form->field($model, 'status')->dropDownList(['default' => 'Default', 'active' => 'Active', 'inactive' => 'Inactive']) ?>
                 </div>
                 <div class="modal-footer">
                     <?= Html::submitButton('Save', ['class' => 'btn btn-success w-100']) ?>
@@ -123,19 +93,17 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
-
 </div>
 
 <?php
+// This JavaScript checks if an 'id' parameter is present when the page loads.
+// If yes, it automatically shows the modal so that the update form is visible.
 $this->registerJs("
-    $(document).ready(function() {
-        if ('" . Yii::$app->request->get('id') . "') {
-            $('#modal').modal('show');
+    $(document).ready(function(){
+        var id = '" . Yii::$app->request->get('id') . "';
+        if (id) {
+            $('#taxes-modal').modal('show');
         }
-        var myModalEl = document.getElementById('modal');
-        myModalEl.addEventListener('hidden.bs.modal', function (event) {
-            window.location.href = '/settings/configurations/tax'; // Replace '/index' with the actual route to your index page.
-        });
     });
-", \yii\web\View::POS_END); // Add at the end of the page
+", \yii\web\View::POS_END);
 ?>
