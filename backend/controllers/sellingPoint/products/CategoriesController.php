@@ -37,16 +37,31 @@ class CategoriesController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+   
+
+
+    public function actionIndex($id = null)
     {
-        $searchModel = new ProductsCategoriesSearch();
+        $model = $id ? $this->findModel($id) : new ProductsCategories();
+        
+        $searchModel = new ProductsCategoriesSearch(['company_id' => Yii::$app->user->identity->company_id]);
+
+
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model,
         ]);
     }
+
+
+
+
+
+
+
 
     /**
      * Displays a single ProductsCategories model.
@@ -66,24 +81,15 @@ class CategoriesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
-    {
+    
+
+    public function actionCreate() {
         $model = new ProductsCategories();
         $model->company_id = Yii::$app->user->identity->company_id;
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-
-                Yii::$app->session->setFlash('success', 'Category Created !');
-
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Products Category Created.');
+            return $this->redirect(['index']);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -93,19 +99,15 @@ class CategoriesController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    
+
+
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
-        $model->company_id = Yii::$app->user->identity->company_id;
-
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Category Updated.');
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'Products Category Updated.');
+            return $this->redirect(['index']);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -118,7 +120,7 @@ class CategoriesController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', 'Category Deleted.');
+        Yii::$app->session->setFlash('success', 'Products  Category Deleted.');
         return $this->redirect(['index']);
     }
 

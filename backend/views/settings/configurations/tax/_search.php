@@ -21,13 +21,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'tax_rate') ?>
 
-    <?= $form->field($model, 'country') ?>
-
     <?= $form->field($model, 'effective_date') ?>
 
     <?php // echo $form->field($model, 'expiration_date') ?>
-
-    <?php // echo $form->field($model, 'description') ?>
 
     <?php // echo $form->field($model, 'created_at') ?>
 

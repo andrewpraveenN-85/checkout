@@ -48,197 +48,117 @@ class Companies extends \yii\db\ActiveRecord {
     public $state;
     public $country;
 
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName() {
         return 'companies';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules() {
         return [
-            [['name'], 'required'],
+            [['name', 'industry', 'contact_number', 'email'], 'required'],
             [['address', 'status'], 'string'],
-            [['name', 'registration_number', 'industry', 'city_id', 'state', 'country', 'contact_number', 'email', 'website', 'logo', 'established_date', 'number_of_employees', 'annual_revenue'], 'safe'],
+            [['name', 'registration_number', 'industry', 'city_id', 'state', 'country', 'contact_number', 'email', 'website', 'logo', 'established_date', 'number_of_employees', 'annual_revenue', 'picture'], 'safe'],
             [['number_of_employees'], 'integer'],
             [['annual_revenue'], 'number'],
-            [['name', 'registration_number', 'industry', 'city_id', 'state', 'country', 'contact_number', 'email', 'website', 'logo'], 'string', 'max' => 255],
+            [['name', 'registration_number', 'industry', 'city_id', 'state', 'country', 'contact_number', 'email', 'website', 'logo', 'picture'], 'string', 'max' => 255],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels() {
         return [
             'name' => 'Name',
-            'registration_number' => 'Registration Number',
+            'registration_number' => 'Registration number',
             'industry' => 'Industry',
             'address' => 'Address',
             'city_id' => 'City',
             'state' => 'State',
             'country' => 'Country',
-            'contact_number' => 'Phone',
+            'contact_number' => 'Contact number',
             'email' => 'Email',
             'website' => 'Website',
             'logo' => 'Logo',
-            'established_date' => 'Established Date',
-            'number_of_employees' => 'Number Of Employees',
-            'annual_revenue' => 'Annual Revenue',
+            'picture' => 'Logo',
+            'established_date' => 'Established date',
+            'number_of_employees' => 'Number of employees',
+            'annual_revenue' => 'Annual eevenue',
             'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => 'Created',
+            'updated_at' => 'Updated',
         ];
     }
 
-    /**
-     * Gets query for [[CompanyFeatures]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getCompanyFeatures() {
         return $this->hasMany(CompanyFeatures::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Configurations]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getConfigurations() {
         return $this->hasMany(Configurations::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[MeasurementUnits]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getMeasurementUnits() {
         return $this->hasMany(MeasurementUnits::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[ProductBatches]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getProductBatches() {
         return $this->hasMany(ProductBatches::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Products]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getProducts() {
         return $this->hasMany(Products::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[ProductsBrands]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getProductsBrands() {
         return $this->hasMany(ProductsBrands::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[ProductsCategories]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getProductsCategories() {
         return $this->hasMany(ProductsCategories::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Purchases]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getPurchases() {
         return $this->hasMany(Purchases::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[RawItems]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getRawItems() {
         return $this->hasMany(RawItems::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[RawItemsBrands]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getRawItemsBrands() {
         return $this->hasMany(RawItemsBrands::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[RawItemsCategories]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getRawItemsCategories() {
         return $this->hasMany(RawItemsCategories::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[StoreFactoryReleases]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getStoreFactoryReleases() {
         return $this->hasMany(StoreFactoryRelease::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[StoreSellingpointReleases]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getStoreSellingpointReleases() {
         return $this->hasMany(StoreSellingpointRelease::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Suppliers]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getSuppliers() {
         return $this->hasMany(Suppliers::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Transactions]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getTransactions() {
         return $this->hasMany(Transactions::class, ['company_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Users]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getUsers() {
         return $this->hasMany(Users::class, ['company_id' => 'id']);
     }
 
     public function getCity() {
         return $this->hasOne(Cities::class, ['id' => 'city_id']);
+    }
+
+    public function getLogoURL() {
+        if ($this->logo != null) {
+            return Yii::$app->params['app_host'] . 'storage/' . $this->id . '/' . $this->logo;
+        } else {
+            return Yii::$app->params['app_host'] . 'storage/default.jpg';
+        }
     }
 }

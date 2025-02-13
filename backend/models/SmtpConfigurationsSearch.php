@@ -18,7 +18,7 @@ class SmtpConfigurationsSearch extends SmtpConfigurations
     {
         return [
             [['id', 'port'], 'integer'],
-            [['host', 'encryption', 'username', 'password', 'created_at', 'updated_at'], 'safe'],
+            [['host', 'encryption', 'username', 'password', 'status',], 'safe'],
         ];
     }
 
@@ -48,6 +48,11 @@ class SmtpConfigurationsSearch extends SmtpConfigurations
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['status'] = [
+            'asc' => [new \yii\db\Expression("FIELD(status, 'default', 'active', 'inactive')")],
+            'desc' => [new \yii\db\Expression("FIELD(status, 'inactive', 'active', 'default')")],
+        ];
+        
         $this->load($params);
 
         if (!$this->validate()) {
@@ -58,16 +63,12 @@ class SmtpConfigurationsSearch extends SmtpConfigurations
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'port' => $this->port,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'host', $this->host])
             ->andFilterWhere(['like', 'encryption', $this->encryption])
-            ->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'password', $this->password]);
+            ->andFilterWhere(['like', 'username', $this->username]);
 
         return $dataProvider;
     }

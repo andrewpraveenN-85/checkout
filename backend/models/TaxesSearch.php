@@ -9,16 +9,15 @@ use backend\models\Taxes;
 /**
  * TaxesSearch represents the model behind the search form of `backend\models\Taxes`.
  */
-class TaxesSearch extends Taxes
-{
+class TaxesSearch extends Taxes {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id'], 'integer'],
-            [['tax_name', 'country', 'effective_date', 'expiration_date', 'description', 'created_at', 'updated_at'], 'safe'],
+            [['tax_name', 'effective_date', 'expiration_date', 'created_at', 'updated_at'], 'safe'],
             [['tax_rate'], 'number'],
         ];
     }
@@ -26,8 +25,7 @@ class TaxesSearch extends Taxes
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,8 +37,7 @@ class TaxesSearch extends Taxes
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Taxes::find();
 
         // add conditions that should always apply here
@@ -48,6 +45,11 @@ class TaxesSearch extends Taxes
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['status'] = [
+            'asc' => [new \yii\db\Expression("FIELD(status, 'default', 'active', 'inactive')")],
+            'desc' => [new \yii\db\Expression("FIELD(status, 'inactive', 'active', 'default')")],
+        ];
 
         $this->load($params);
 
@@ -59,17 +61,13 @@ class TaxesSearch extends Taxes
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'tax_rate' => $this->tax_rate,
+            'company_id' => $this->company_id,
+            'rate' => $this->rate,
             'effective_date' => $this->effective_date,
             'expiration_date' => $this->expiration_date,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'tax_name', $this->tax_name])
-            ->andFilterWhere(['like', 'country', $this->country])
-            ->andFilterWhere(['like', 'description', $this->description]);
+        $query->andFilterWhere(['like', 'tax_name', $this->tax_name]);
 
         return $dataProvider;
     }

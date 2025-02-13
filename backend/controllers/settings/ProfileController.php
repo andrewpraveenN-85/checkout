@@ -18,8 +18,8 @@ class ProfileController extends Controller {
         $model->state = $model->city->state_id;
         $model->country = $model->city->state->country_id;
         $countries = ArrayHelper::map(Countries::find()->andWhere(['status' => 'active'])->all(), 'id', 'name');
-        $states = ArrayHelper::map(States::find()->andWhere(['status' => 'active', 'country_id' => $model->city->state->country_id])->all(), 'id', 'name');;
-        $cities = ArrayHelper::map(Cities::find()->andWhere(['status' => 'active', 'state_id' => $model->city->state_id])->all(), 'id', 'name');;
+        $states = ArrayHelper::map(States::find()->andWhere(['status' => 'active', 'country_id' => $model->city->state->country_id])->all(), 'id', 'name');
+        $cities = ArrayHelper::map(Cities::find()->andWhere(['status' => 'active', 'state_id' => $model->city->state_id])->all(), 'id', 'name');
         return $this->render('index', [
                     'model' => $model,
                     'countries' => $countries,
@@ -31,7 +31,7 @@ class ProfileController extends Controller {
     public function actionProfile() {
         $model = $this->findModel(Yii::$app->user->id);
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Profile updated.');
+            Yii::$app->session->setFlash('success', 'Profile updated successfully.');
             return $this->redirect(['index']);
         }
     }
@@ -58,7 +58,7 @@ class ProfileController extends Controller {
                 }
             }
             if ($model->save(false)) {
-                Yii::$app->session->setFlash('success', 'Profile picture updated.');
+                Yii::$app->session->setFlash('success', 'Profile picture updated successfully.');
                 return $this->redirect(['index']);
             }
         }
@@ -70,7 +70,7 @@ class ProfileController extends Controller {
             if ($model->validatePassword($model->password)) {
                 $model->setPassword($model->newpassword);
                 if ($model->save(false)) {
-                    Yii::$app->session->setFlash('success', 'Password updated successfully.');
+                    Yii::$app->session->setFlash('success', 'Profile password updated successfully.');
                     return $this->redirect(['index']);
                 }
             }

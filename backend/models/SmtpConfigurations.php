@@ -13,58 +13,50 @@ use Yii;
  * @property string|null $encryption
  * @property string $username
  * @property string $password
+ * @property string $status
  * @property string $created_at
  * @property string $updated_at
- *
+ * @property int $company_id
+ * 
+ * @property Companies $company
  * @property Configurations[] $configurations
  */
-class SmtpConfigurations extends \yii\db\ActiveRecord
-{
+class SmtpConfigurations extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'smtp_configurations';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['host', 'port', 'username', 'password'], 'required'],
+            [['host', 'port', 'username', 'encryption', 'password', 'company_id', 'status'], 'required'],
             [['port'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['host', 'encryption', 'username', 'password'], 'string', 'max' => 255],
+            [['host', 'encryption', 'username', 'password', 'status'], 'string', 'max' => 255],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
-            'id' => 'ID',
             'host' => 'Host',
             'port' => 'Port',
             'encryption' => 'Encryption',
             'username' => 'Username',
             'password' => 'Password',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'status' => 'Status',
+            'created_at' => 'Created',
+            'updated_at' => 'Updated',
         ];
     }
 
-    /**
-     * Gets query for [[Configurations]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getConfigurations()
-    {
+    public function getCompany() {
+        return $this->hasOne(Companies::class, ['id' => 'company_id']);
+    }
+
+    public function getConfigurations() {
         return $this->hasMany(Configurations::class, ['smtp_configuration_id' => 'id']);
     }
 }

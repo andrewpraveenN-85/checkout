@@ -16,24 +16,26 @@ use Yii;
  * @property string|null $description
  * @property string $created_at
  * @property string $updated_at
+ * @property string $status
+ * @property int $company_id
  *
+ * @property Companies $company
  * @property Configurations[] $configurations
+ * @property Companies $company
  */
-class Taxes extends \yii\db\ActiveRecord
-{
+class Taxes extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'taxes';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['tax_name', 'tax_rate'], 'required'],
             [['tax_rate'], 'number'],
@@ -46,8 +48,7 @@ class Taxes extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'tax_name' => 'Tax Name',
@@ -61,13 +62,21 @@ class Taxes extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getCompany() {
+        return $this->hasOne(Companies::class, ['id' => 'company_id']);
+    }
+
+    public function getConfigurations() {
+        return $this->hasMany(Configurations::class, ['default_tax_id' => 'id']);
+    }
+
     /**
-     * Gets query for [[Configurations]].
+     * Gets query for [[Company]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getConfigurations()
+    public function getCompany()
     {
-        return $this->hasMany(Configurations::class, ['default_tax_id' => 'id']);
+        return $this->hasOne(Companies::class, ['id' => 'company_id']);
     }
 }

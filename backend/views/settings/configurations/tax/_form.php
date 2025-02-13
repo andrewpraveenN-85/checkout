@@ -16,17 +16,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'tax_rate')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'country')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'effective_date')->input('date') ?>
 
-    <?= $form->field($model, 'effective_date')->textInput() ?>
+    <?= $form->field($model, 'expiration_date')->input('date') ?>
 
-    <?= $form->field($model, 'expiration_date')->textInput() ?>
+    <!-- <?= $form->field($model, 'created_at')->textInput() ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
+    <?= $form->field($model, 'updated_at')->textInput() ?> -->
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

@@ -5,7 +5,6 @@ use yii\widgets\ActiveForm;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-use common\models\Brands;
 
 /** @var yii\web\View $this */
 /** @var backend\models\RawItemsBrandsSearch $searchModel */
@@ -43,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'active' => 'Active',
                             'inactive' => 'Inactive',
                         ],
-                        ['class' => 'form-control', 'prompt' => 'Select']
+                        ['class' => 'form-select', 'prompt' => 'Select'] 
                 ),
             ],
             [
@@ -84,10 +83,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <?= $form->field($model, 'name')->textInput(['maxlength' => 200, 'class' => 'form-control mb-2']) ?>
+                        <?= $form->field($model, 'name')->textInput(['maxlength' => 200, 'placeholder'=>'Brand name']) ?>
                     </div>
                     <div class="mb-3">
-                        <?= $form->field($model, 'status')->dropDownList(['active' => 'Active', 'inactive' => 'Inactive'], ['class' => 'form-control mb-2', 'prompt' => 'Select',]) ?>
+                        <?= $form->field($model, 'status')->dropDownList(['active' => 'Active', 'inactive' => 'Inactive'], ['prompt' => 'Status',]) ?>
                     </div>
                 </div>
                 <div class="modal-footer">
