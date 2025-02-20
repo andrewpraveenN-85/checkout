@@ -17,8 +17,8 @@ class TaxesSearch extends Taxes {
     public function rules() {
         return [
             [['id'], 'integer'],
-            [['tax_name', 'effective_date', 'expiration_date', 'created_at', 'updated_at'], 'safe'],
-            [['tax_rate'], 'number'],
+            [['name', 'effective_date', 'expiration_date'], 'safe'],
+            [['rate'], 'number'],
         ];
     }
 
@@ -67,7 +67,7 @@ class TaxesSearch extends Taxes {
             'expiration_date' => $this->expiration_date,
         ]);
 
-        $query->andFilterWhere(['like', 'tax_name', $this->tax_name]);
+        $query->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;
     }

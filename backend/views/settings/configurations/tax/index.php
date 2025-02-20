@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <!-- Button to trigger the modal -->
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#taxes-modal">
-            <?= $isUpdate ? 'Update Taxes' : 'Create Taxes' ?>
+            Create
         </button>
     </p>
 
@@ -36,8 +36,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'tax_name',
-            'tax_rate',
+            'name',
+            'rate',
             'effective_date',
             'expiration_date',
             'status',
@@ -66,23 +66,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="modal fade" id="taxes-modal" tabindex="-1" aria-labelledby="taxesModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <?php
-                // The form's action will be "create" or "update" based on the $isUpdate flag.
-                $form = ActiveForm::begin([
-                    'id' => 'taxes-form',
-                    'action' => $isUpdate ? ['update', 'id' => $model->id] : ['create'],
-                    'options' => ['enctype' => 'multipart/form-data']
-                ]);
-                ?>
+                <?php if ($model->isNewRecord) { ?>
+                    <?php $form = ActiveForm::begin(['action' => ['create'], 'options' => ['enctype' => 'multipart/form-data']]); ?>
+                <?php } else { ?>
+                    <?php $form = ActiveForm::begin(['action' => ['update', 'id' => $model->id], 'options' => ['enctype' => 'multipart/form-data']]); ?>
+                <?php } ?>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="taxesModalLabel">
-                        <?= $isUpdate ? 'Update Taxes' : 'Create Taxes' ?>
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="exampleModalLabel"><?= $model->isNewRecord ? 'Create TAX' : 'Update TAX - ' . Html::encode($model->name) ?></h5>
+                    <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <?= $form->field($model, 'tax_name')->textInput(['maxlength' => true]) ?>
-                    <?= $form->field($model, 'tax_rate')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'rate')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'effective_date')->input('date') ?>
                     <?= $form->field($model, 'expiration_date')->input('date') ?>
                     <?= $form->field($model, 'status')->dropDownList(['default' => 'Default', 'active' => 'Active', 'inactive' => 'Inactive']) ?>

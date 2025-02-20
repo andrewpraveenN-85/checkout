@@ -99,24 +99,24 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php $form = ActiveForm::begin(['action' => ['update', 'id' => $model->id], 'options' => ['enctype' => 'multipart/form-data']]); ?>
                 <?php } ?>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><?= $model->isNewRecord ? 'Create Tax' : 'Update Tax - ' . Html::encode($model->name) ?></h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><?= $model->isNewRecord ? 'Create SMTP' : 'Update SMTP - ' . Html::encode($model->name) ?></h5>
                     <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <?= $form->field($model, 'host')->textInput(['maxlength' => 200, 'placeholder' => 'Tax name']) ?>
+                        <?= $form->field($model, 'host')->textInput(['maxlength' => 200, 'placeholder' => 'Host']) ?>
                     </div>
                     <div class="mb-3">
-                        <?= $form->field($model, 'port')->textInput(['type' => 'number', 'min' => 0.00, 'step' => 0.01, 'max' => 100.00, 'placeholder' => 'Tax rate']) ?>
+                        <?= $form->field($model, 'port')->textInput(['type' => 'number', 'min' => 0, 'step' => 1, 'max' => 1000, 'placeholder' => 'Port']) ?>
                     </div>
                     <div class="mb-3">
-                        <?= $form->field($model, 'encryption')->textInput(['type' => 'number', 'min' => 0.00, 'step' => 0.01, 'max' => 100.00, 'placeholder' => 'Tax rate']) ?>
+                        <?= $form->field($model, 'encryption')->dropDownList(['ssl' => 'SSL', 'tls' => 'TLS', 'none' => 'None'], ['prompt' => 'Status...']) ?>
                     </div>
                     <div class="mb-3">
-                        <?= $form->field($model, 'username')->textInput(['type' => 'date', 'placeholder' => 'Effective date']) ?>
+                        <?= $form->field($model, 'username')->textInput(['maxlength' => 255, 'placeholder' => 'Username']) ?>
                     </div>
                     <div class="mb-3">
-                        <?= $form->field($model, 'password')->textInput(['type' => 'date', 'placeholder' => 'Expiration date']) ?>
+                        <?= $form->field($model, 'password')->passwordInput(['maxlength' => 255, 'placeholder' => 'Password']) ?>
                     </div>
                     <div class="mb-3">
                         <?= $form->field($model, 'status')->dropDownList(['default' => 'Default', 'active' => 'Active', 'inactive' => 'Inactive'], ['prompt' => 'Status...']) ?>
@@ -130,3 +130,17 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+
+<?php
+$this->registerJs("
+    $(document).ready(function() {
+        if ('" . Yii::$app->request->get('id') . "') {
+            $('#modal').modal('show');
+        }
+        var myModalEl = document.getElementById('modal');
+        myModalEl.addEventListener('hidden.bs.modal', function (event) {
+            window.location.href = '/settings/configurations/smtpmail'; // Replace '/index' with the actual route to your index page.
+        });
+    });
+", \yii\web\View::POS_END); // Add at the end of the page
+?>
