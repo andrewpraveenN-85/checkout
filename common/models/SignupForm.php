@@ -8,6 +8,7 @@ use common\models\Users;
 use backend\models\Companies;
 use backend\models\Roles;
 use backend\models\RolesPermissions;
+use backend\models\Configurations;
 /**
  * Signup form
  */
@@ -67,7 +68,7 @@ class SignupForm extends Model {
         }
         $rolePermission = $this->createRolePermission($role->id);
         $user = $this->createUser($company->id, $role->id);
-        if ($user->save() && $rolePermission->save()) {
+        if ($user->save() && $rolePermission->save() && $this->createConfiguration($company->id)) {
             return $this->sendEmail($user);
         }
         return false;
@@ -109,11 +110,12 @@ class SignupForm extends Model {
         return $rolePermission;
     }
 
-    /**
-     * Sends confirmation email to user
-     * @param User $user user model to with email should be send
-     * @return bool whether the email was sent
-     */
+    private function createConfiguration($companyId){
+        $configuration = new Configurations();
+        $configuration->company_id = $companyId;
+        return $configuration->save(false);
+    }
+    
     protected function sendEmail($user) {
         return Yii::$app
                         ->mailer

@@ -4,6 +4,7 @@ use yii\helpers\Url;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\widgets\DetailView;
+use yii\widgets\Pjax;
 
 $this->title = $model->first_name . ' ' . $model->middle_name . ' ' . $model->last_name;
 $this->params['breadcrumbs'][] = 'Settings';
@@ -21,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Update
                 </button> 
             </p>
+            <?php Pjax::begin(); ?>
             <?=
             DetailView::widget([
                 'model' => $model,
@@ -33,16 +35,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ])
             ?>
+            <?php Pjax::end(); ?>
         </div>
         <div class="col-9">
             <p>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                     Update
                 </button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                     Password
                 </button>
             </p>
+            <?php Pjax::begin(); ?>
             <?=
             DetailView::widget([
                 'model' => $model,
@@ -64,6 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ])
             ?>
+            <?php Pjax::end(); ?>
         </div>
     </div>
 

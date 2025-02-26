@@ -91,7 +91,6 @@ Yii::debug('Available Roles in View: ' . print_r($roles, true));
     ?>
     <?php Pjax::end(); ?>
 
-
     <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">

@@ -1,134 +1,43 @@
 <?php
 
 namespace backend\controllers\settings;
-
+use Yii;
 use backend\models\Configurations;
-use backend\models\ConfigurationsSearch;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use backend\models\Currencies;
+use backend\models\Languages;
+use yii\helpers\ArrayHelper;
 
-/**
- * ConfigurationsController implements the CRUD actions for Configurations model.
- */
-class ConfigurationController extends Controller
-{
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
+class ConfigurationController extends Controller {
 
-    /**
-     * Lists all Configurations models.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $searchModel = new ConfigurationsSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
+    public function actionIndex() {
+        $currencies = ArrayHelper::map(Currencies::find()->andWhere(['status' => 'active'])->all(), 'id', 'name');
+        $languages = ArrayHelper::map(Languages::find()->andWhere(['status' => 'active'])->all(), 'id', 'name');
+        $timezones=[];
+        foreach (timezone_identifiers_list() as $value) {
+            $timezones[$value] = $value;
+        }
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'model' => $this->findModel(Yii::$app->user->identity->company_id),
+            'currencies' => $currencies,
+            'languages' => $languages,
+            'timezones' => $timezones,
         ]);
     }
 
-    /**
-     * Displays a single Configurations model.
-     * @param string $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Configurations model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Configurations();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Configurations model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
+    public function actionUpdate() {
+        $model = $this->findModel(Yii::$app->user->identity->company_id);
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'Configurations updated successfully.');
+            return $this->redirect(['index']);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
-    /**
-     * Deletes an existing Configurations model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Configurations model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id ID
-     * @return Configurations the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Configurations::findOne(['id' => $id])) !== null) {
+    protected function findModel($id) {
+        if (($model = Configurations::findOne(['company_id' => $id])) !== null) {
             return $model;
+        }else{
+            return new Configurations();
         }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

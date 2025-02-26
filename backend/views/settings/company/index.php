@@ -4,13 +4,12 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
-use yii\bootstrap5\Modal;
+use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
 /** @var backend\models\Companies $model */
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = 'Settings';
-$this->params['breadcrumbs'][] = 'Configurations';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -24,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Update
                 </button> 
             </p>
+            <?php Pjax::begin(); ?>
             <?=
             DetailView::widget([
                 'model' => $model,
@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ])
             ?>
+            <?php Pjax::end(); ?>
         </div>
         <div class="col-9">
             <p>
@@ -43,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Update
                 </button>
             </p>
+            <?php Pjax::begin(); ?>
             <?=
             DetailView::widget([
                 'model' => $model,
@@ -66,6 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ])
             ?>
+            <?php Pjax::end(); ?>
         </div>
     </div>
 

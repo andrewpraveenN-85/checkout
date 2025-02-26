@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers\settings\configurations;
+namespace backend\controllers\settings;
 
 use backend\models\CompanyFeatures;
 use backend\models\CompanyFeaturesSearch;

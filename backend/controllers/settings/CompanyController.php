@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers\settings\configurations;
+namespace backend\controllers\settings;
 
 use backend\models\Companies;
 use yii\web\Controller;
@@ -34,7 +34,7 @@ class CompanyController extends Controller {
     public function actionUpdate() {
         $model = $this->findModel(Yii::$app->user->identity->company_id);
         if ($this->request->isPost && $model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Profile updated successfully.');
+            Yii::$app->session->setFlash('success', 'Company updated successfully.');
             return $this->redirect(['index']);
         }
     }

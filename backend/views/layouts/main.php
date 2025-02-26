@@ -18,8 +18,8 @@ AppAsset::register($this);
         <?php $this->registerCsrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
-        <!--<link href="<?= Yii::$app->params['app_host'] . 'css/bootstrap.min.css'; ?>" rel="stylesheet">-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="<?= Yii::$app->params['app_host'] . 'css/bootstrap.min.css'; ?>" rel="stylesheet">
+        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
         <style>
             /* Ensure the sidebar takes full height */
             #sidebar {
@@ -356,6 +356,16 @@ AppAsset::register($this);
                             <div class="collapse" id="settings">
                                 <ul class="nav flex-column ms-3">
                                     <li class="nav-item">
+                                        <a class="nav-link" aria-current="page" href="/settings/company">
+                                            <i class="fa fa-building fa-fw fa-sm"></i><span class="nav-link-text">Company</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" aria-current="page" href="/settings/configuration">
+                                            <i class="fa fa-cogs fa-fw fa-sm"></i><span class="nav-link-text">Configuration</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" aria-current="page" href="/settings/profile">
                                             <i class="fa fa-user fa-fw fa-sm"></i><span class="nav-link-text">Profile</span>
                                         </a>
@@ -371,38 +381,9 @@ AppAsset::register($this);
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" data-bs-toggle="collapse" href="#configuration" role="button" aria-expanded="false" aria-controls="submenu5">
-                                            <i class="fa fa-cogs fa-fw fa-sm"></i><span class="nav-link-text">Configurations</span><i class="fa fa-caret-down dropdown-arrow"></i>
+                                        <a class="nav-link" aria-current="page" href="/settings/features">
+                                            <i class="fa fa-trophy fa-sm"></i><span class="nav-link-text">Feature</span>
                                         </a>
-                                        <div class="collapse" id="configuration">
-                                            <ul class="nav flex-column ms-3">
-                                                <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/settings/configurations/company">
-                                                        <i class="fa fa-building fa-fw fa-sm"></i><span class="nav-link-text">Company</span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/settings/configurations/tax">
-                                                        <i class="fa fa-gavel fa-sm"></i><span class="nav-link-text">Tax</span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/settings/configurations/features">
-                                                        <i class="fa fa-trophy fa-sm"></i><span class="nav-link-text">Feature</span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/settings/configurations/smtpmail">
-                                                        <i class="fa fa-envelope fa-fw fa-sm"></i><span class="nav-link-text">SMTP Mail</span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" aria-current="page" href="/settings/configuration">
-                                                        <i class="fa fa-cogs fa-fw fa-sm"></i><span class="nav-link-text">Configuration</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -442,8 +423,8 @@ AppAsset::register($this);
                 <p class="float-end"><?= Yii::powered() ?></p>
             </div>
         </footer>
-        <!--<script src="<?= Yii::$app->params['app_host'] . 'js/bootstrap.bundle.min.js'; ?>"></script>-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="<?= Yii::$app->params['app_host'] . 'js/bootstrap.bundle.min.js'; ?>"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>-->
         <script>
             const sidebar = document.getElementById('sidebar');
             const wrapper = document.getElementById('wrapper');
