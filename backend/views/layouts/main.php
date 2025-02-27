@@ -366,6 +366,11 @@ AppAsset::register($this);
                                         </a>
                                     </li>
                                     <li class="nav-item">
+                                        <a class="nav-link" aria-current="page" href="/settings/tax">
+                                            <i class="fa fa-calculator fa-fw fa-sm"></i><span class="nav-link-text">Taxes</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" aria-current="page" href="/settings/profile">
                                             <i class="fa fa-user fa-fw fa-sm"></i><span class="nav-link-text">Profile</span>
                                         </a>
